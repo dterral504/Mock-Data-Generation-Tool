@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Form, Button, Input, Label, Col, Row, FormGroup } from "reactstrap";
 import GeneratorColumnInput from "./GeneratorColumnInput";
-import { addField } from "../../actions/form";
+import { addField, setNumRows, setFileType } from "../../actions/form";
 
 class GeneratorForm extends Component {
 
@@ -42,8 +42,8 @@ class GeneratorForm extends Component {
   }
 
   renderColInputs() {
-    console.log(this.props);
-    return this.props.colIdArray.map(id => {
+    console.log(this.props.form.colIdArray);
+    return this.props.form.colIdArray.map(id => {
       return (
         <GeneratorColumnInput
           id={id}
@@ -88,8 +88,7 @@ class GeneratorForm extends Component {
               name="numrows"
               id="numrows"
               onChange={e => {
-                this.setState({ numRows: e.target.value });
-                console.log(this.state);
+                this.props.setNumRows(e.target.value);
               }}
             />
           </Col>
@@ -99,7 +98,7 @@ class GeneratorForm extends Component {
               type="select"
               name="filetype"
               id="filetype"
-              onChange={e => this.setState({ fileType: e.target.value })}
+              onChange={e => this.props.setFileType(e.target.value)}
             >
               <option>CSV</option>
               <option>Excel</option>
@@ -128,14 +127,16 @@ class GeneratorForm extends Component {
 // datatype of current column and anything else from store
 const mapStateToProps = (state) => {
   return {
-    colIdArray: state.form.colIdArray
+    form: state.form
   }
 }
 
 // all actions needed by component ***be sure to import them***
 const mapDispatchToProps = () => {
   return {
-    addField
+    addField,
+    setNumRows,
+    setFileType
   }
 }
 

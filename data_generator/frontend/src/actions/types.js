@@ -5,3 +5,8 @@ export const ADD_LEAD = "ADD_LEAD";
 
 // FORM
 export const ADD_FIELD = "ADD_FIELD";
+export const SET_NUM_ROWS = "SET_NUM_ROWS";
+export const SET_FILE_TYPE = "SET_FILE_TYPE";
+// COLUMN INPUT
+export const SET_DATA_TYPE = "SET_DATA_TYPE";
+export const SET_NUM_COLS = "SET_NUM_COLS";

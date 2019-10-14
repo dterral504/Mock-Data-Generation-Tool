@@ -14,7 +14,7 @@ class App extends Component {
                     <PageHeader />
                     <Container>
                         <GeneratorForm />
-                    </Container>]
+                    </Container>
                 </div>
             </Provider>
         );
