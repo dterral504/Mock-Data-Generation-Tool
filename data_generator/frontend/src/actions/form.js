@@ -1,11 +1,19 @@
 // import axios from 'axios';
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_DATA_TYPE, SET_NUM_COLS } from './types';
+
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_DATA_TYPE, SET_NUM_COLS, EXPORT_CONFIG } from './types';
 
 // GET LEADS
 export const addField = () => {
     return {
         type: ADD_FIELD
     }
+};
+
+// EXPORT CONFIG
+export const exportConfig = () => {
+  return {
+      type: EXPORT_CONFIG
+  }
 };
 
 // SET NUM ROWS

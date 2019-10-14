@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Form, Button, Input, Label, Col, Row, FormGroup } from "reactstrap";
 import GeneratorColumnInput from "./GeneratorColumnInput";
-import { addField, setNumRows, setFileType } from "../../actions/form";
+
+import { addField, setNumRows, setFileType, exportConfig } from "../../actions/form";
+
 
 class GeneratorForm extends Component {
 
@@ -109,7 +111,7 @@ class GeneratorForm extends Component {
         <hr />
         <FormGroup row>
           <Col md={2}>
-            <Button color="secondary" onClick={this.exportConfiguration}>
+            <Button color="secondary" onClick={this.props.exportConfig}>
               Export Config
             </Button>
           </Col>
@@ -135,6 +137,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = () => {
   return {
     addField,
+    exportConfig,
     setNumRows,
     setFileType
   }
