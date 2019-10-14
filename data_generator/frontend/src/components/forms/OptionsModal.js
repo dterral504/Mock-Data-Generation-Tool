@@ -74,7 +74,9 @@ class OptionsModal extends Component {
             />
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.confirmModal}>
+            <Button color="primary" onClick={e => {
+              this.props.setDataType(e.target.value, this.props.id);
+            }}>
               Confirm Options
             </Button>
           </ModalFooter>
