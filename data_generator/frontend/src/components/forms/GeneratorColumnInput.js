@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { FormGroup, Col, Input } from "reactstrap";
 import OptionsModal from "./OptionsModal";
 import { connect } from "react-redux";
+import { setNumCols, setDataType } from "../../actions/form";
 
 class GeneratorColumnInput extends Component {
   constructor(props) {
@@ -38,7 +39,9 @@ class GeneratorColumnInput extends Component {
             type="select"
             name="datatype"
             id={`type-${this.props.id}`}
-          // onChange={this.onDataTypeChange}
+            onChange={e => {
+              this.props.setDataType(e.target.value, this.props.id);
+            }}
           >
             <option value="integer">Integer</option>
             <option value="time-series">Time-Series</option>
@@ -51,7 +54,9 @@ class GeneratorColumnInput extends Component {
             type="number"
             name="numcols"
             id={`numcols-${this.props.id}`}
-            // onChange={this.onNumColsChange}
+            onChange={e => {
+              this.props.setNumCols(e.target.value, this.props.id);
+            }}
             placeholder="0"
           />
         </Col>
@@ -76,6 +81,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = () => {
   return {
     // all actions needed by component ***be sure to import them***
+    setDataType,
+    setNumCols
   }
 }
 
