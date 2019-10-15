@@ -15,3 +15,6 @@ export const SET_FILE_TYPE = "SET_FILE_TYPE";
 // COLUMN INPUT
 export const SET_DATA_TYPE = "SET_DATA_TYPE";
 export const SET_NUM_COLS = "SET_NUM_COLS";
+
+// GENERATE DATA
+export const GENERATE_DATA = "GENERATE_DATA";

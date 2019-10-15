@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Form, Button, Input, Label, Col, Row, FormGroup } from "reactstrap";
 import GeneratorColumnInput from "./GeneratorColumnInput";
 
-import { addField, setNumRows, setFileType, exportConfig } from "../../actions/form";
+import { addField, setNumRows, setFileType, exportConfig, generateData } from "../../actions/form";
 
 
 class GeneratorForm extends Component {
@@ -36,12 +36,12 @@ class GeneratorForm extends Component {
   //   }));
   // }
 
-  generateData(options) {
-    console.log(this.state);
-    // TO DO: two possible options for implementation (TBD):
-    //    (1) perform the data file export or (PROBABLY THIS OPTION)
-    //    (2) send the options as a paramter to a function in app.py to export the data
-  }
+  // generateData(options) {
+  //   console.log(this.state);
+  //   // TO DO: two possible options for implementation (TBD):
+  //   //    (1) perform the data file export or (PROBABLY THIS OPTION)
+  //   //    (2) send the options as a paramter to a function in app.py to export the data
+  // }
 
   renderColInputs() {
     console.log(this.props.form.colIdArray);
@@ -116,7 +116,7 @@ class GeneratorForm extends Component {
             </Button>
           </Col>
           <Col>
-            <Button color="success" onClick={this.generateData}>
+            <Button color="success" onClick={this.props.generateData}>
               Generate Data
             </Button>
           </Col>
@@ -139,7 +139,8 @@ const mapDispatchToProps = () => {
     addField,
     exportConfig,
     setNumRows,
-    setFileType
+    setFileType,
+      generateData
   }
 }
 

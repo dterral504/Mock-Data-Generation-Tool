@@ -1,4 +1,4 @@
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG } from "../actions/types.js";
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA } from "../actions/types.js";
 
 const initialState = {
     numRows: 0,
@@ -7,6 +7,11 @@ const initialState = {
     numColsArray: [0],
     colOptsArray: [{}],
     colIdArray: [0]
+}
+
+
+function generateData(){
+    console.log(state);
 }
 
 export default function (state = initialState, action) {
@@ -32,6 +37,7 @@ export default function (state = initialState, action) {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+            return state;
             break;
 
         case SET_NUM_ROWS:
@@ -58,7 +64,36 @@ export default function (state = initialState, action) {
                 ...state,
                 colTypeArray: newArr
             };
+        case GENERATE_DATA:
+            console.log("here");
+            //generateData();
+            console.log(state);
 
+            var arr = [];
+            var cols=state.numColsArray;
+            var rows=state.numRows;
+            var max = 100;
+            var totalCols = 0;
+
+            for(var i=0; i<cols.length; i++) {
+                totalCols += parseInt(cols[i]);
+            }
+
+            for(var i=0; i<rows; i++) {
+                arr.push(Array.from({length: totalCols}, () => Math.floor(Math.random() * max)));
+            }
+
+            contentType = "application/csv;charset=utf-8;";
+            var a = document.createElement('a');
+            a.download = "config.csv";
+            a.href = 'data:' + contentType + ',' + arr.map(e => e.join(",")).join("\n");
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            return state;
+
+            break;
         default:
             return state;
     }
