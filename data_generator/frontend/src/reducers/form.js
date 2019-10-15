@@ -98,8 +98,7 @@ export default function (state = initialState, action) {
             var newArr = state.colOptsArray.splice(0)
             newArr[action.payload.id] = {
                 dist: action.payload.dist,
-                min: parseInt(action.payload.opts.min),
-                max: parseInt(action.payload.opts.max)
+                opts: action.payload.opts
             }
             console.log(newArr);
             return {

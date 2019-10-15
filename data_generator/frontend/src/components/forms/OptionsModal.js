@@ -38,31 +38,31 @@ class OptionsModal extends Component {
     if (type == "integer") {
       if (dist == "uniform") {
         var opts = {
-          min: document.getElementById(`min-${this.props.id}`).value,
-          max: document.getElementById(`max-${this.props.id}`).value
+          min: parseInt(document.getElementById(`min-${this.props.id}`).value),
+          max: parseInt(document.getElementById(`max-${this.props.id}`).value)
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
-      if (dist == "uniform") {
+      if (dist == "normal") {
         var opts = {
-          mean: document.getElementById(`mean-${this.props.id}`).value,
-          standard_deviation: document.getElementById(`standard-deviation-${this.props.id}`).value
+          mean: parseInt(document.getElementById(`mean-${this.props.id}`).value),
+          standard_deviation: parseInt(document.getElementById(`standard-deviation-${this.props.id}`).value)
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
     }
-    if (type == "zip-code") {
-      if (dist == "country") {
+    else if (type == "zip-code") {
+      if (dist == "uniform-usa") {
         var opts = {};
         this.props.setOptsInt(dist, opts, this.props.id);
       }
-      if (dist == "state") {
+      else if (dist == "uniform-state") {
         var opts = {
           state: document.getElementById(`state-${this.props.id}`).value
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
-      if (dist == "city") {
+      else if (dist == "uniform-city") {
         var opts = {
           state: document.getElementById(`state-${this.props.id}`).value,
           city: document.getElementById(`city-${this.props.id}`).value
