@@ -62,7 +62,7 @@ class GeneratorColumnInput extends Component {
         </Col>
         <Col md={2}>
           <OptionsModal
-            // type={this.state.dataType}
+            type={this.props.form.colTypeArray[this.props.id]}
             // onModalChange={this.onModalChange}
             id={this.props.id}
           />
@@ -75,6 +75,7 @@ class GeneratorColumnInput extends Component {
 const mapStateToProps = (state) => {
   return {
     // datatype of current column and anything else from store
+    form: state.form
   }
 }
 

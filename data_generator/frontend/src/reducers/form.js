@@ -1,4 +1,4 @@
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG } from "../actions/types.js";
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, SET_OPTS_INT } from "../actions/types.js";
 
 const initialState = {
     numRows: 0,
@@ -37,7 +37,7 @@ export default function (state = initialState, action) {
         case SET_NUM_ROWS:
             return {
                 ...state,
-                numRows: action.payload.value
+                numRows: parseInt(action.payload.value)
             };
         case SET_FILE_TYPE:
             return {
@@ -46,7 +46,7 @@ export default function (state = initialState, action) {
             };
         case SET_NUM_COLS:
             var newArr = state.numColsArray.splice(0)
-            newArr[action.payload.id] = action.payload.value
+            newArr[action.payload.id] = parseInt(action.payload.value)
             return {
                 ...state,
                 numColsArray: newArr
@@ -58,7 +58,18 @@ export default function (state = initialState, action) {
                 ...state,
                 colTypeArray: newArr
             };
-
+        case SET_OPTS_INT:
+            var newArr = state.colOptsArray.splice(0)
+            newArr[action.payload.id] = {
+                dist: action.payload.dist,
+                min: parseInt(action.payload.opts.min),
+                max: parseInt(action.payload.opts.max)
+            }
+            console.log(newArr);
+            return {
+                ...state,
+                colOptsArray: newArr
+            }
         default:
             return state;
     }
