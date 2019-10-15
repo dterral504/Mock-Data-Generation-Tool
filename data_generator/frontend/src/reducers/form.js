@@ -1,5 +1,8 @@
 import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT } from "../actions/types.js";
 
+var faker = require('faker');
+var zipcodes = require('zipcodes');
+
 const initialState = {
     numRows: 0,
     fileType: "CSV",
@@ -72,6 +75,7 @@ export default function (state = initialState, action) {
             var arr = [];
             var cols = state.numColsArray;
             var rows = state.numRows;
+            var types = state.colTypeArray;
             var max = 100;
             var totalCols = 0;
 
@@ -79,8 +83,47 @@ export default function (state = initialState, action) {
                 totalCols += parseInt(cols[i]);
             }
 
+            // initialize array
             for (var i = 0; i < rows; i++) {
-                arr.push(Array.from({ length: totalCols }, () => Math.floor(Math.random() * max)));
+                arr.push(Array.from({ length: totalCols }, () => 0));
+            }
+
+            // fill array with each type
+            var currentCol = 0;
+            for (var i=0; i<types.length; i++){
+                for(var j=0; j<cols[i]; j++){
+                    if(types[i]=="integer"){
+                        for(var k=0; k<rows; k++) {
+                            arr[k][currentCol] = Math.floor(Math.random() * max);
+                        }
+                    }
+                    else if(types[i]=="name"){
+                        for(var k=0; k<rows; k++) {
+                            arr[k][currentCol] = faker.name.findName();
+                        }
+                    }
+                    else if(types[i]=="zip-codes"){
+                        var options = "random";
+                        for(var k=0; k<rows; k++) {
+                            if(options=="random"){
+                                arr[k][currentCol] = zipcodes.random().zip;
+                            }
+                            else if (options == "state"){
+                                arr[k][currentCol] = zipcodes.lookupByState('MA')[0].zip;
+                            }
+                            else if (options == "cityState"){
+                                arr[k][currentCol] = zipcodes.lookupByName('Austin', 'TX')[0].zip;
+                            }
+                        }
+                    }
+                    else if(types[i]=="phone-number"){
+                        var areaCode = "512";
+                        for(var k=0; k<rows; k++) {
+                            arr[k][currentCol] = areaCode + Math.floor(Math.random() * 10000000).toString();
+                        }
+                    }
+                    currentCol++;
+                }
             }
 
             contentType = "application/csv;charset=utf-8;";
