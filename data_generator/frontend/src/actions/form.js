@@ -1,6 +1,6 @@
 // import axios from 'axios';
 
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_DATA_TYPE, SET_NUM_COLS, EXPORT_CONFIG } from './types';
+import {ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_DATA_TYPE, SET_NUM_COLS, EXPORT_CONFIG, GENERATE_DATA} from './types';
 
 // GET LEADS
 export const addField = () => {
@@ -45,5 +45,12 @@ export const setDataType = (value, id) => {
     return {
         type: SET_DATA_TYPE,
         payload: { value, id }
+    }
+};
+
+// SET GENERATE DATA
+export const generateData = () => {
+    return {
+        type: GENERATE_DATA
     }
 };
