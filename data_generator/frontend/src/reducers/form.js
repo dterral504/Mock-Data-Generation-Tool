@@ -1,4 +1,4 @@
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA } from "../actions/types.js";
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT } from "../actions/types.js";
 
 const initialState = {
     numRows: 0,
@@ -10,7 +10,7 @@ const initialState = {
 }
 
 
-function generateData(){
+function generateData() {
     console.log(state);
 }
 
@@ -43,7 +43,7 @@ export default function (state = initialState, action) {
         case SET_NUM_ROWS:
             return {
                 ...state,
-                numRows: action.payload.value
+                numRows: parseInt(action.payload.value)
             };
         case SET_FILE_TYPE:
             return {
@@ -52,7 +52,7 @@ export default function (state = initialState, action) {
             };
         case SET_NUM_COLS:
             var newArr = state.numColsArray.splice(0)
-            newArr[action.payload.id] = action.payload.value
+            newArr[action.payload.id] = parseInt(action.payload.value)
             return {
                 ...state,
                 numColsArray: newArr
@@ -70,17 +70,17 @@ export default function (state = initialState, action) {
             console.log(state);
 
             var arr = [];
-            var cols=state.numColsArray;
-            var rows=state.numRows;
+            var cols = state.numColsArray;
+            var rows = state.numRows;
             var max = 100;
             var totalCols = 0;
 
-            for(var i=0; i<cols.length; i++) {
+            for (var i = 0; i < cols.length; i++) {
                 totalCols += parseInt(cols[i]);
             }
 
-            for(var i=0; i<rows; i++) {
-                arr.push(Array.from({length: totalCols}, () => Math.floor(Math.random() * max)));
+            for (var i = 0; i < rows; i++) {
+                arr.push(Array.from({ length: totalCols }, () => Math.floor(Math.random() * max)));
             }
 
             contentType = "application/csv;charset=utf-8;";
@@ -94,6 +94,18 @@ export default function (state = initialState, action) {
             return state;
 
             break;
+        case SET_OPTS_INT:
+            var newArr = state.colOptsArray.splice(0)
+            newArr[action.payload.id] = {
+                dist: action.payload.dist,
+                min: parseInt(action.payload.opts.min),
+                max: parseInt(action.payload.opts.max)
+            }
+            console.log(newArr);
+            return {
+                ...state,
+                colOptsArray: newArr
+            }
         default:
             return state;
     }
