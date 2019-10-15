@@ -19,12 +19,59 @@ class OptionsModal extends Component {
   constructor(props) {
     super(props);
     this.toggleModal = this.toggleModal.bind(this);
-    this.confirmModal = this.confirmModal.bind(this);
     this.state = {
       type: this.props.type,
+      dist: "",
       isOpen: false
     };
   }
+
+  handleDistributionChange = e => {
+    // var dist = e.target.value;
+    this.setState({ dist: e.target.value });
+  };
+
+  handleModalSubmit = evt => {
+    var type = this.props.form.colTypeArray[this.props.id];
+    var dist = this.state.dist;
+    console.log("here");
+    if (type == "integer") {
+      if (dist == "uniform") {
+        var opts = {
+          min: document.getElementById(`min-${this.props.id}`).value,
+          max: document.getElementById(`max-${this.props.id}`).value
+        };
+        this.props.setOptsInt(dist, opts, this.props.id);
+      }
+      if (dist == "uniform") {
+        var opts = {
+          mean: document.getElementById(`mean-${this.props.id}`).value,
+          standard_deviation: document.getElementById(`standard-deviation-${this.props.id}`).value
+        };
+        this.props.setOptsInt(dist, opts, this.props.id);
+      }
+    }
+    if (type == "zip-code") {
+      if (dist == "country") {
+        var opts = {};
+        this.props.setOptsInt(dist, opts, this.props.id);
+      }
+      if (dist == "state") {
+        var opts = {
+          state: document.getElementById(`state-${this.props.id}`).value
+        };
+        this.props.setOptsInt(dist, opts, this.props.id);
+      }
+      if (dist == "city") {
+        var opts = {
+          state: document.getElementById(`state-${this.props.id}`).value,
+          city: document.getElementById(`city-${this.props.id}`).value
+        };
+        this.props.setOptsInt(dist, opts, this.props.id);
+      }
+    }
+    this.toggleModal()
+  };
 
   toggleModal() {
     this.setState(prevState => ({
@@ -32,15 +79,8 @@ class OptionsModal extends Component {
     }));
   }
 
-  confirmModal() {
-    this.toggleModal();
-    const { onModalChange } = this.props;
-    onModalChange(this.state.option1, this.state.option2, this.state.option3);
-  }
-
   render() {
     if (this.props.type == "integer") {
-      var more = (<p>TEST!!!!!</p>)
       var modal_html = (
         <div>
           <Button color="secondary" onClick={this.toggleModal}>
@@ -55,7 +95,6 @@ class OptionsModal extends Component {
           >
             <ModalHeader toggle={this.toggleModal}>Integer Options</ModalHeader>
             <ModalBody>
-              {more}
               <Form>
                 <FormGroup>
                   <Label>Distribution</Label>
@@ -63,47 +102,65 @@ class OptionsModal extends Component {
                     type="select"
                     name="distribution"
                     id={`dist-${this.props.id}`}
-                    onChange={e => {
-                      more = (<p>IT WORKED!</p>);
-                      console.log("hey")
-                      this.setState({ state: this.state });
-                    }}
+                    onChange={this.handleDistributionChange}
                   >
+                    <option value="">--Select a Distribution--</option>
                     <option value="uniform">Uniform</option>
                     <option value="normal">Gaussian (Normal)</option>
                   </Input>
                 </FormGroup>
+                <hr />
+                <h5>Uniform</h5>
                 <FormGroup row>
                   <Col md={6}>
                     <Label>Min Value</Label>
                     <Input
                       type="number"
-                      name="numcols"
+                      name="min"
                       id={`min-${this.props.id}`}
-                      onChange={e => this.setState({ option2: e.target.value })}
+                      // onChange={e => this.setState({ option2: e.target.value })}
+                      disabled={this.state.dist !== "uniform"}
                     />
                   </Col>
                   <Col md={6}>
                     <Label>Max Value</Label>
                     <Input
                       type="number"
-                      name="foo"
+                      name="max"
                       id={`max-${this.props.id}`}
-                      onChange={e => this.setState({ option3: e.target.value })}
+                      // onChange={e => this.setState({ option3: e.target.value })}
+                      disabled={this.state.dist !== "uniform"}
+                    />
+                  </Col>
+                </FormGroup>
+                <hr />
+                <h5>Gaussian (Normal)</h5>
+                <FormGroup row>
+                  <Col md={6}>
+                    <Label>Mean</Label>
+                    <Input
+                      type="number"
+                      name="mean"
+                      id={`mean-${this.props.id}`}
+                      // onChange={e => this.setState({ option2: e.target.value })}
+                      disabled={this.state.dist !== "normal"}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <Label>Standard Deviation</Label>
+                    <Input
+                      type="number"
+                      name="standard-deviation"
+                      id={`standard-deviation-${this.props.id}`}
+                      // onChange={e => this.setState({ option3: e.target.value })}
+                      disabled={this.state.dist !== "normal"}
                     />
                   </Col>
                 </FormGroup>
               </Form>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={e => {
-                var dist = document.getElementById(`dist-${this.props.id}`).value;
-                var opts = {
-                  min: document.getElementById(`min-${this.props.id}`).value,
-                  max: document.getElementById(`max-${this.props.id}`).value
-                };
-                this.props.setOptsInt(dist, opts, this.props.id);
-              }}>
+              <Button color="primary" onClick={this.handleModalSubmit}>
                 Confirm Options
               </Button>
             </ModalFooter>
@@ -112,7 +169,72 @@ class OptionsModal extends Component {
       )
       return modal_html;
     }
-    else {
+    else if (this.props.type == "zip-code") {
+      var modal_html = (
+        <div>
+          <Button color="secondary" onClick={this.toggleModal}>
+            Options
+          </Button>
+
+          <Modal
+            isOpen={this.state.isOpen}
+            toggle={this.toggleModal}
+            //   className={this.props.className}
+            unmountOnClose={false}
+          >
+            <ModalHeader toggle={this.toggleModal}>Zip Code Options</ModalHeader>
+            <ModalBody>
+              <Form>
+                <FormGroup>
+                  <Label>Distribution</Label>
+                  <Input
+                    type="select"
+                    name="distribution"
+                    id={`dist-${this.props.id}`}
+                    onChange={this.handleDistributionChange}
+                  >
+                    <option value="">--Select a Distribution--</option>
+                    <option value="uniform-usa">Uniform (USA)</option>
+                    <option value="uniform-state">Uniform (State)</option>
+                    <option value="uniform-city">Uniform (City)</option>
+                  </Input>
+                </FormGroup>
+                <hr />
+                <h5>Uniform</h5>
+                <FormGroup row>
+                  <Col md={6}>
+                    <Label>State</Label>
+                    <Input
+                      type="number"
+                      name="state"
+                      id={`state-${this.props.id}`}
+                      // onChange={e => this.setState({ option2: e.target.value })}
+                      disabled={(this.state.dist != "uniform-city") && (this.state.dist != "uniform-state")}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <Label>City</Label>
+                    <Input
+                      type="number"
+                      name="city"
+                      id={`city-${this.props.id}`}
+                      // onChange={e => this.setState({ option3: e.target.value })}
+                      disabled={this.state.dist != "uniform-city"}
+                    />
+                  </Col>
+                </FormGroup>
+              </Form>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.handleModalSubmit}>
+                Confirm Options
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </div>
+      )
+      return modal_html;
+    } else {
       return (
         <div>
           <Button color="secondary" onClick={this.toggleModal}>
@@ -151,10 +273,7 @@ class OptionsModal extends Component {
               />
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={e => {
-                var dist = document.getElementById(`dist-`)
-                this.props.setOptsInt()
-              }}>
+              <Button color="primary" onClick={this.handleModalSubmit}>
                 Confirm Options
               </Button>
             </ModalFooter>
