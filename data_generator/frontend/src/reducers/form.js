@@ -1,6 +1,7 @@
 import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT } from "../actions/types.js";
 
 var faker = require('faker');
+var zipcodes = require('zipcodes');
 
 const initialState = {
     numRows: 0,
@@ -83,7 +84,8 @@ export default function (state = initialState, action) {
 
             for (var i = 0; i < rows; i++) {
                 //arr.push(Array.from({ length: totalCols }, () => Math.floor(Math.random() * max)));
-                arr.push(Array.from({ length: totalCols }, () => faker.name.findName()));
+                //arr.push(Array.from({ length: totalCols }, () => faker.name.findName()));
+                arr.push(Array.from({ length: totalCols }, () => zipcodes.random().zip));
             }
 
             contentType = "application/csv;charset=utf-8;";
