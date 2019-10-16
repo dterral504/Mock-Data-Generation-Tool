@@ -76,6 +76,7 @@ export default function (state = initialState, action) {
             var cols = state.numColsArray;
             var rows = state.numRows;
             var types = state.colTypeArray;
+            var options = state.colOptsArray;
             var max = 100;
             var totalCols = 0;
 
@@ -102,17 +103,16 @@ export default function (state = initialState, action) {
                             arr[k][currentCol] = faker.name.findName();
                         }
                     }
-                    else if(types[i]=="zip-codes"){
-                        var options = "random";
+                    else if(types[i]=="zip-code"){
                         for(var k=0; k<rows; k++) {
-                            if(options=="random"){
+                            if(options[i].dist=="uniform-usa"){
                                 arr[k][currentCol] = zipcodes.random().zip;
                             }
-                            else if (options == "state"){
-                                arr[k][currentCol] = zipcodes.lookupByState('MA')[0].zip;
+                            else if (options[i].dist == "uniform-state"){
+                                arr[k][currentCol] = zipcodes.lookupByState(options[i].opts.state)[Math.floor(Math.random() * 100)].zip;
                             }
-                            else if (options == "cityState"){
-                                arr[k][currentCol] = zipcodes.lookupByName('Austin', 'TX')[0].zip;
+                            else if (options[i].dist == "uniform-city"){
+                                arr[k][currentCol] = zipcodes.lookupByName(options[i].opts.city, options[i].opts.state)[Math.floor(Math.random() * 100)].zip;
                             }
                         }
                     }
