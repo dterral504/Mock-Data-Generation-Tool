@@ -116,10 +116,9 @@ export default function (state = initialState, action) {
                             }
                         }
                     }
-                    else if(types[i]=="phone-number"){
-                        var areaCode = "512";
+                    else if(types[i]=="phone"){
                         for(var k=0; k<rows; k++) {
-                            arr[k][currentCol] = areaCode + Math.floor(Math.random() * 10000000).toString();
+                            arr[k][currentCol] = options[i].opts.areaCodes + Math.floor(Math.random() * 10000000).toString();
                         }
                     }
                     currentCol++;
