@@ -1,6 +1,5 @@
 import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT } from "../actions/types.js";
 
-var faker = require('faker');
 var zipcodes = require('zipcodes');
 
 const initialState = {
@@ -13,8 +12,33 @@ const initialState = {
 }
 
 
-function generateData() {
-    console.log(state);
+function gaussian(mean, stdev) {
+    var y2;
+    var use_last = false;
+    return function () {
+        var y1;
+        if (use_last) {
+            y1 = y2;
+            use_last = false;
+        }
+        else {
+            var x1, x2, w;
+            do {
+                x1 = 2.0 * Math.random() - 1.0;
+                x2 = 2.0 * Math.random() - 1.0;
+                w = x1 * x1 + x2 * x2;
+            } while (w >= 1.0);
+            w = Math.sqrt((-2.0 * Math.log(w)) / w);
+            y1 = x1 * w;
+            y2 = x2 * w;
+            use_last = true;
+        }
+
+        var retval = mean + stdev * y1;
+        if (retval > 0)
+            return retval;
+        return -retval;
+    }
 }
 
 export default function (state = initialState, action) {
@@ -68,20 +92,17 @@ export default function (state = initialState, action) {
                 colTypeArray: newArr
             };
         case GENERATE_DATA:
-            console.log("here");
-            //generateData();
             console.log(state);
 
             var arr = [];
             var cols = state.numColsArray;
             var rows = state.numRows;
             var types = state.colTypeArray;
-            var options = state.colOptsArray;
-            var max = 100;
-            var totalCols = 0;
+            var colOpts = state.colOptsArray;
 
+            var totalCols = 0;
             for (var i = 0; i < cols.length; i++) {
-                totalCols += parseInt(cols[i]);
+                totalCols += cols[i];
             }
 
             // initialize array
@@ -91,40 +112,47 @@ export default function (state = initialState, action) {
 
             // fill array with each type
             var currentCol = 0;
-            for (var i=0; i<types.length; i++){
-                for(var j=0; j<cols[i]; j++){
-                    if(types[i]=="integer"){
-                        for(var k=0; k<rows; k++) {
-                            arr[k][currentCol] = Math.floor(Math.random() * max);
+            for (var i = 0; i < types.length; i++) {
+                for (var j = 0; j < cols[i]; j++) {
+                    if (types[i] == "integer") {
+                        if (colOpts[i].dist == "uniform") {
+                            var min = Math.ceil(colOpts[i].opts.min);
+                            var max = Math.floor(colOpts[i].opts.max);
+                            for (var k = 0; k < rows; k++) {
+                                arr[k][currentCol] = Math.floor(Math.random() * (max - min + 1)) + min;
+                            }
+                        } else if (colOpts[i].dist == "normal") {
+                            var mean = colOpts[i].opts.mean;
+                            var stdev = colOpts[i].opts.standard_deviation;
+                            var normal_dist = gaussian(mean, stdev);
+                            for (var k = 0; k < rows; k++) {
+                                arr[k][currentCol] = Math.floor(normal_dist());
+                            }
                         }
-                    }
-                    else if(types[i]=="name"){
-                        for(var k=0; k<rows; k++) {
-                            arr[k][currentCol] = faker.name.findName();
-                        }
+
                     }
                     else if(types[i]=="zip-code"){
                         for(var k=0; k<rows; k++) {
-                            if(options[i].dist=="uniform-usa"){
+                            if(colOpts[i].dist=="uniform-usa"){
                                 arr[k][currentCol] = zipcodes.random().zip;
                             }
-                            else if (options[i].dist == "uniform-state"){
-                                arr[k][currentCol] = zipcodes.lookupByState(options[i].opts.state)[Math.floor(Math.random() * 100)].zip;
+                            else if (colOpts[i].dist == "uniform-state"){
+                                arr[k][currentCol] = zipcodes.lookupByState(colOpts[i].opts.state)[Math.floor(Math.random() * 100)].zip;
                             }
-                            else if (options[i].dist == "uniform-city"){
-                                arr[k][currentCol] = zipcodes.lookupByName(options[i].opts.city, options[i].opts.state)[Math.floor(Math.random() * 100)].zip;
+                            else if (colOpts[i].dist == "uniform-city"){
+                                arr[k][currentCol] = zipcodes.lookupByName(colOpts[i].opts.city, colOpts[i].opts.state)[Math.floor(Math.random() * 100)].zip;
                             }
                         }
                     }
                     else if(types[i]=="phone"){
-                        if(options[i].dist=="all-area-codes"){
+                        if(colOpts[i].dist=="all-area-codes"){
                             for(var k=0; k<rows; k++) {
                                 arr[k][currentCol] = Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 10000).toString();
                             }
                         }
-                        if(options[i].dist=="area-codes"){
+                        if(colOpts[i].dist=="area-codes"){
                             for(var k=0; k<rows; k++) {
-                                arr[k][currentCol] = options[i].opts.areaCodes+"-"+Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 10000).toString();
+                                arr[k][currentCol] = colOpts[i].opts.areaCodes+"-"+Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 10000).toString();
                             }
                         }
                     }
