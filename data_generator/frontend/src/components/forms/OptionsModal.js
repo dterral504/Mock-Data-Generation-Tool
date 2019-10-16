@@ -70,6 +70,19 @@ class OptionsModal extends Component {
         this.props.setOptsInt(dist, opts, this.props.id);
       }
     }
+    else if (type == "phone") {
+      if (dist == "all-area-codes") {
+        var opts = {};
+        this.props.setOptsInt(dist, opts, this.props.id);
+      }
+      if (dist == "area-codes") {
+        var areaCodes = document.getElementById(`area-codes-${this.props.id}`).value
+        var opts = {
+          areaCodes: areaCodes
+        };
+        this.props.setOptsInt(dist, opts, this.props.id);
+      }
+    }
     this.toggleModal()
   };
 
@@ -205,7 +218,7 @@ class OptionsModal extends Component {
                   <Col md={6}>
                     <Label>State</Label>
                     <Input
-                      type="number"
+                      type="text"
                       name="state"
                       id={`state-${this.props.id}`}
                       // onChange={e => this.setState({ option2: e.target.value })}
@@ -215,11 +228,65 @@ class OptionsModal extends Component {
                   <Col md={6}>
                     <Label>City</Label>
                     <Input
-                      type="number"
+                      type="text"
                       name="city"
                       id={`city-${this.props.id}`}
                       // onChange={e => this.setState({ option3: e.target.value })}
                       disabled={this.state.dist != "uniform-city"}
+                    />
+                  </Col>
+                </FormGroup>
+              </Form>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.handleModalSubmit}>
+                Confirm Options
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </div>
+      )
+      return modal_html;
+    } else if (this.props.type == "phone") {
+      var modal_html = (
+        <div>
+          <Button color="secondary" onClick={this.toggleModal}>
+            Options
+          </Button>
+
+          <Modal
+            isOpen={this.state.isOpen}
+            toggle={this.toggleModal}
+            //   className={this.props.className}
+            unmountOnClose={false}
+          >
+            <ModalHeader toggle={this.toggleModal}>Phone Number Options</ModalHeader>
+            <ModalBody>
+              <Form>
+                <FormGroup>
+                  <Label>Filter</Label>
+                  <Input
+                    type="select"
+                    name="distribution"
+                    id={`dist-${this.props.id}`}
+                    onChange={this.handleDistributionChange}
+                  >
+                    <option value="">--Select a Distribution--</option>
+                    <option value="all-area-codes">None</option>
+                    <option value="area-codes">By Area Code</option>
+                  </Input>
+                </FormGroup>
+                <hr />
+                <h5>Area Code</h5>
+                <FormGroup row>
+                  <Col md={12}>
+                    <Label>Area Codes (comma separated list)</Label>
+                    <Input
+                      type="text"
+                      name="state"
+                      id={`area-codes-${this.props.id}`}
+                      // onChange={e => this.setState({ option2: e.target.value })}
+                      disabled={this.state.dist != "area-codes"}
                     />
                   </Col>
                 </FormGroup>
