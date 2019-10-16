@@ -1,6 +1,5 @@
 import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT } from "../actions/types.js";
 
-var faker = require('faker');
 var zipcodes = require('zipcodes');
 
 const initialState = {
@@ -14,10 +13,7 @@ const initialState = {
 
 
 function generateIntegers(dist, opts) {
-    // var max = 100;
-    // for(var k=0; k<rows; k++) {
-    //     arr[k][currentCol] = Math.floor(Math.random() * max);
-    // }
+
     if (dist == "uniform") {
         var min = opts.min;
         var max = opts.max;
@@ -101,7 +97,15 @@ export default function (state = initialState, action) {
             for (var i = 0; i < types.length; i++) {
                 for (var j = 0; j < cols[i]; j++) {
                     if (types[i] == "integer") {
-                        generateIntegers(colOpts[i].dist, colOpts[i].opts);
+                        if (colOpts[i].dist == "uniform") {
+                            var max = 100;
+                            for (var k = 0; k < rows; k++) {
+                                arr[k][currentCol] = Math.floor(Math.random() * max);
+                            }
+                        } else if (colOpts[i].dist == "normal") {
+
+                        }
+
                     }
                     else if (types[i] == "zip-code") {
                         var options = "random";
