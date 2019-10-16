@@ -131,28 +131,44 @@ export default function (state = initialState, action) {
                         }
 
                     }
-                    else if(types[i]=="zip-code"){
-                        for(var k=0; k<rows; k++) {
-                            if(colOpts[i].dist=="uniform-usa"){
+                    else if (types[i] == "zip-code") {
+                        for (var k = 0; k < rows; k++) {
+                            if (colOpts[i].dist == "uniform-usa") {
                                 arr[k][currentCol] = zipcodes.random().zip;
                             }
-                            else if (colOpts[i].dist == "uniform-state"){
+                            else if (colOpts[i].dist == "uniform-state") {
                                 arr[k][currentCol] = zipcodes.lookupByState(colOpts[i].opts.state)[Math.floor(Math.random() * 100)].zip;
                             }
-                            else if (colOpts[i].dist == "uniform-city"){
+                            else if (colOpts[i].dist == "uniform-city") {
                                 arr[k][currentCol] = zipcodes.lookupByName(colOpts[i].opts.city, colOpts[i].opts.state)[Math.floor(Math.random() * 100)].zip;
                             }
                         }
                     }
-                    else if(types[i]=="phone"){
-                        if(colOpts[i].dist=="all-area-codes"){
-                            for(var k=0; k<rows; k++) {
-                                arr[k][currentCol] = Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 10000).toString();
+                    else if (types[i] == "phone") {
+                        if (colOpts[i].dist == "all-area-codes") {
+                            for (var k = 0; k < rows; k++) {
+                                var first = Math.floor(Math.random() * 1000);
+                                while (first < 100) { first = Math.floor(Math.random() * 1000) }
+                                var middle = Math.floor(Math.random() * 1000);
+                                if (middle < 10) middle = "00" + middle.toString();
+                                else if (middle < 100) middle = "0" + middle.toString();
+                                var last = Math.floor(Math.random() * 10000);
+                                if (last < 10) last = "000" + last.toString();
+                                else if (last < 100) last = "00" + last.toString();
+                                else if (last < 1000) last = "0" + last.toString();
+                                arr[k][currentCol] = first + "-" + middle + "-" + last;
                             }
                         }
-                        if(colOpts[i].dist=="area-codes"){
-                            for(var k=0; k<rows; k++) {
-                                arr[k][currentCol] = colOpts[i].opts.areaCodes+"-"+Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 10000).toString();
+                        if (colOpts[i].dist == "area-codes") {
+                            for (var k = 0; k < rows; k++) {
+                                var middle = Math.floor(Math.random() * 1000);
+                                if (middle < 10) middle = "00" + middle.toString();
+                                else if (middle < 100) middle = "0" + middle.toString();
+                                var last = Math.floor(Math.random() * 10000);
+                                if (last < 10) last = "000" + last.toString();
+                                else if (last < 100) last = "00" + last.toString();
+                                else if (last < 1000) last = "0" + last.toString();
+                                arr[k][currentCol] = colOpts[i].opts.areaCodes + "-" + middle + "-" + last;
                             }
                         }
                     }
