@@ -13,8 +13,18 @@ const initialState = {
 }
 
 
-function generateData() {
-    console.log(state);
+function generateIntegers(dist, opts) {
+    // var max = 100;
+    // for(var k=0; k<rows; k++) {
+    //     arr[k][currentCol] = Math.floor(Math.random() * max);
+    // }
+    if (dist == "uniform") {
+        var min = opts.min;
+        var max = opts.max;
+    } else if (dist == "normal") {
+        var mean = opts.mean;
+        var standard_deviation = opts.standard_deviation;
+    }
 }
 
 export default function (state = initialState, action) {
@@ -68,19 +78,17 @@ export default function (state = initialState, action) {
                 colTypeArray: newArr
             };
         case GENERATE_DATA:
-            console.log("here");
-            //generateData();
             console.log(state);
 
             var arr = [];
             var cols = state.numColsArray;
             var rows = state.numRows;
             var types = state.colTypeArray;
-            var max = 100;
-            var totalCols = 0;
+            var colOpts = state.colOptsArray
 
+            var totalCols = 0;
             for (var i = 0; i < cols.length; i++) {
-                totalCols += parseInt(cols[i]);
+                totalCols += cols[i];
             }
 
             // initialize array
@@ -90,35 +98,28 @@ export default function (state = initialState, action) {
 
             // fill array with each type
             var currentCol = 0;
-            for (var i=0; i<types.length; i++){
-                for(var j=0; j<cols[i]; j++){
-                    if(types[i]=="integer"){
-                        for(var k=0; k<rows; k++) {
-                            arr[k][currentCol] = Math.floor(Math.random() * max);
-                        }
+            for (var i = 0; i < types.length; i++) {
+                for (var j = 0; j < cols[i]; j++) {
+                    if (types[i] == "integer") {
+                        generateIntegers(colOpts[i].dist, colOpts[i].opts);
                     }
-                    else if(types[i]=="name"){
-                        for(var k=0; k<rows; k++) {
-                            arr[k][currentCol] = faker.name.findName();
-                        }
-                    }
-                    else if(types[i]=="zip-codes"){
+                    else if (types[i] == "zip-code") {
                         var options = "random";
-                        for(var k=0; k<rows; k++) {
-                            if(options=="random"){
+                        for (var k = 0; k < rows; k++) {
+                            if (options == "random") {
                                 arr[k][currentCol] = zipcodes.random().zip;
                             }
-                            else if (options == "state"){
+                            else if (options == "state") {
                                 arr[k][currentCol] = zipcodes.lookupByState('MA')[0].zip;
                             }
-                            else if (options == "cityState"){
+                            else if (options == "cityState") {
                                 arr[k][currentCol] = zipcodes.lookupByName('Austin', 'TX')[0].zip;
                             }
                         }
                     }
-                    else if(types[i]=="phone-number"){
+                    else if (types[i] == "phone") {
                         var areaCode = "512";
-                        for(var k=0; k<rows; k++) {
+                        for (var k = 0; k < rows; k++) {
                             arr[k][currentCol] = areaCode + Math.floor(Math.random() * 10000000).toString();
                         }
                     }
