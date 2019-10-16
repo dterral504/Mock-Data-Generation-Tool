@@ -153,10 +153,12 @@ export default function (state = initialState, action) {
                                 arr[k][currentCol] = zipcodes.random().zip;
                             }
                             else if (colOpts[i].dist == "uniform-state") {
-                                arr[k][currentCol] = zipcodes.lookupByState(colOpts[i].opts.state)[Math.floor(Math.random() * 100)].zip;
+                                var stateZipCodes = zipcodes.lookupByState(colOpts[i].opts.state);
+                                arr[k][currentCol] = stateZipCodes[Math.floor(Math.random() * stateZipCodes.length)].zip;
                             }
                             else if (colOpts[i].dist == "uniform-city") {
-                                arr[k][currentCol] = zipcodes.lookupByName(colOpts[i].opts.city, colOpts[i].opts.state)[Math.floor(Math.random() * 100)].zip;
+                                var cityZipCodes = zipcodes.lookupByName(colOpts[i].opts.city, colOpts[i].opts.state);
+                                arr[k][currentCol] = cityZipCodes[Math.floor(Math.random() * (cityZipCodes.length - 1))].zip;
                             }
                         }
                     }
