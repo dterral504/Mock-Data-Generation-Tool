@@ -45,8 +45,23 @@ class OptionsModal extends Component {
       }
       if (dist == "normal") {
         var opts = {
-          mean: parseInt(document.getElementById(`mean-${this.props.id}`).value),
-          standard_deviation: parseInt(document.getElementById(`standard-deviation-${this.props.id}`).value)
+          mean: document.getElementById(`mean-${this.props.id}`).value,
+          standard_deviation: document.getElementById(`standard-deviation-${this.props.id}`).value
+        };
+        this.props.setOptsInt(dist, opts, this.props.id);
+      }
+    } else if (type == "float") {
+      if (dist == "uniform") {
+        var opts = {
+          min: document.getElementById(`min-${this.props.id}`).value,
+          max: document.getElementById(`max-${this.props.id}`).value
+        };
+        this.props.setOptsInt(dist, opts, this.props.id);
+      }
+      if (dist == "normal") {
+        var opts = {
+          mean: document.getElementById(`mean-${this.props.id}`).value,
+          standard_deviation: document.getElementById(`standard-deviation-${this.props.id}`).value
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
@@ -107,6 +122,95 @@ class OptionsModal extends Component {
             unmountOnClose={false}
           >
             <ModalHeader toggle={this.toggleModal}>Integer Options</ModalHeader>
+            <ModalBody>
+              <Form>
+                <FormGroup>
+                  <Label>Distribution</Label>
+                  <Input
+                    type="select"
+                    name="distribution"
+                    id={`dist-${this.props.id}`}
+                    onChange={this.handleDistributionChange}
+                  >
+                    <option value="">--Select a Distribution--</option>
+                    <option value="uniform">Uniform</option>
+                    <option value="normal">Gaussian (Normal)</option>
+                  </Input>
+                </FormGroup>
+                <hr />
+                <h5>Uniform</h5>
+                <FormGroup row>
+                  <Col md={6}>
+                    <Label>Min Value</Label>
+                    <Input
+                      type="number"
+                      name="min"
+                      id={`min-${this.props.id}`}
+                      // onChange={e => this.setState({ option2: e.target.value })}
+                      disabled={this.state.dist !== "uniform"}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <Label>Max Value</Label>
+                    <Input
+                      type="number"
+                      name="max"
+                      id={`max-${this.props.id}`}
+                      // onChange={e => this.setState({ option3: e.target.value })}
+                      disabled={this.state.dist !== "uniform"}
+                    />
+                  </Col>
+                </FormGroup>
+                <hr />
+                <h5>Gaussian (Normal)</h5>
+                <FormGroup row>
+                  <Col md={6}>
+                    <Label>Mean</Label>
+                    <Input
+                      type="number"
+                      name="mean"
+                      id={`mean-${this.props.id}`}
+                      // onChange={e => this.setState({ option2: e.target.value })}
+                      disabled={this.state.dist !== "normal"}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <Label>Standard Deviation</Label>
+                    <Input
+                      type="number"
+                      name="standard-deviation"
+                      id={`standard-deviation-${this.props.id}`}
+                      // onChange={e => this.setState({ option3: e.target.value })}
+                      disabled={this.state.dist !== "normal"}
+                    />
+                  </Col>
+                </FormGroup>
+              </Form>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.handleModalSubmit}>
+                Confirm Options
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </div>
+      )
+      return modal_html;
+    }
+    else if (this.props.type == "float") {
+      var modal_html = (
+        <div>
+          <Button color="secondary" onClick={this.toggleModal}>
+            Options
+          </Button>
+
+          <Modal
+            isOpen={this.state.isOpen}
+            toggle={this.toggleModal}
+            //   className={this.props.className}
+            unmountOnClose={false}
+          >
+            <ModalHeader toggle={this.toggleModal}>Float Options</ModalHeader>
             <ModalBody>
               <Form>
                 <FormGroup>
