@@ -130,6 +130,22 @@ export default function (state = initialState, action) {
                             }
                         }
 
+                    } else if (types[i] == "float") {
+                        if (colOpts[i].dist == "uniform") {
+                            var min = colOpts[i].opts.min;
+                            var max = colOpts[i].opts.max;
+                            for (var k = 0; k < rows; k++) {
+                                arr[k][currentCol] = Math.random() * (max - min + 1) + min;
+                            }
+                        } else if (colOpts[i].dist == "normal") {
+                            var mean = colOpts[i].opts.mean;
+                            var stdev = colOpts[i].opts.standard_deviation;
+                            var normal_dist = gaussian(mean, stdev);
+                            for (var k = 0; k < rows; k++) {
+                                arr[k][currentCol] = normal_dist();
+                            }
+                        }
+
                     }
                     else if (types[i] == "zip-code") {
                         for (var k = 0; k < rows; k++) {
