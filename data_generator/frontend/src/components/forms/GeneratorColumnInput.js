@@ -45,7 +45,6 @@ class GeneratorColumnInput extends Component {
           >
             <option value="integer">Integer</option>
             <option value="zip-code">Zip Code</option>
-            <option value="email">Email</option>
             <option value="phone">Phone Number</option>
           </Input>
         </Col>
