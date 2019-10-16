@@ -117,8 +117,15 @@ export default function (state = initialState, action) {
                         }
                     }
                     else if(types[i]=="phone"){
-                        for(var k=0; k<rows; k++) {
-                            arr[k][currentCol] = options[i].opts.areaCodes + Math.floor(Math.random() * 10000000).toString();
+                        if(options[i].dist=="all-area-codes"){
+                            for(var k=0; k<rows; k++) {
+                                arr[k][currentCol] = Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 10000).toString();
+                            }
+                        }
+                        if(options[i].dist=="area-codes"){
+                            for(var k=0; k<rows; k++) {
+                                arr[k][currentCol] = options[i].opts.areaCodes+"-"+Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 10000).toString();
+                            }
                         }
                     }
                     currentCol++;
