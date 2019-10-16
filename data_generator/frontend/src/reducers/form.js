@@ -98,7 +98,7 @@ export default function (state = initialState, action) {
             var cols = state.numColsArray;
             var rows = state.numRows;
             var types = state.colTypeArray;
-            var colOpts = state.colOptsArray
+            var colOpts = state.colOptsArray;
 
             var totalCols = 0;
             for (var i = 0; i < cols.length; i++) {
@@ -131,24 +131,29 @@ export default function (state = initialState, action) {
                         }
 
                     }
-                    else if (types[i] == "zip-code") {
-                        var options = "random";
-                        for (var k = 0; k < rows; k++) {
-                            if (options == "random") {
+                    else if(types[i]=="zip-code"){
+                        for(var k=0; k<rows; k++) {
+                            if(colOpts[i].dist=="uniform-usa"){
                                 arr[k][currentCol] = zipcodes.random().zip;
                             }
-                            else if (options == "state") {
-                                arr[k][currentCol] = zipcodes.lookupByState('MA')[0].zip;
+                            else if (colOpts[i].dist == "uniform-state"){
+                                arr[k][currentCol] = zipcodes.lookupByState(colOpts[i].opts.state)[Math.floor(Math.random() * 100)].zip;
                             }
-                            else if (options == "cityState") {
-                                arr[k][currentCol] = zipcodes.lookupByName('Austin', 'TX')[0].zip;
+                            else if (colOpts[i].dist == "uniform-city"){
+                                arr[k][currentCol] = zipcodes.lookupByName(colOpts[i].opts.city, colOpts[i].opts.state)[Math.floor(Math.random() * 100)].zip;
                             }
                         }
                     }
-                    else if (types[i] == "phone") {
-                        var areaCode = "512";
-                        for (var k = 0; k < rows; k++) {
-                            arr[k][currentCol] = areaCode + Math.floor(Math.random() * 10000000).toString();
+                    else if(types[i]=="phone"){
+                        if(colOpts[i].dist=="all-area-codes"){
+                            for(var k=0; k<rows; k++) {
+                                arr[k][currentCol] = Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 10000).toString();
+                            }
+                        }
+                        if(colOpts[i].dist=="area-codes"){
+                            for(var k=0; k<rows; k++) {
+                                arr[k][currentCol] = colOpts[i].opts.areaCodes+"-"+Math.floor(Math.random() * 1000).toString()+"-"+Math.floor(Math.random() * 10000).toString();
+                            }
                         }
                     }
                     currentCol++;
