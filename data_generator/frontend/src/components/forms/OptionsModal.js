@@ -45,8 +45,8 @@ class OptionsModal extends Component {
       }
       if (dist == "normal") {
         var opts = {
-          mean: document.getElementById(`mean-${this.props.id}`).value,
-          standard_deviation: document.getElementById(`standard-deviation-${this.props.id}`).value
+          mean: parseInt(document.getElementById(`mean-${this.props.id}`).value),
+          standard_deviation: parseInt(document.getElementById(`standard-deviation-${this.props.id}`).value)
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
@@ -60,8 +60,8 @@ class OptionsModal extends Component {
       }
       if (dist == "normal") {
         var opts = {
-          mean: document.getElementById(`mean-${this.props.id}`).value,
-          standard_deviation: document.getElementById(`standard-deviation-${this.props.id}`).value
+          mean: parseInt(document.getElementById(`mean-${this.props.id}`).value),
+          standard_deviation: parseInt(document.getElementById(`standard-deviation-${this.props.id}`).value)
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
