@@ -8,41 +8,6 @@ import { addField, setNumRows, setFileType, exportConfig, generateData } from ".
 
 class GeneratorForm extends Component {
 
-  // dataTypeChanged(id, type) {
-  //   var colTypeArray = { ...this.state.colTypeArray };
-  //   colTypeArray[id] = type;
-  //   this.setState({ colTypeArray });
-  // }
-
-  // numColsChanged(id, numCols) {
-  //   var numColsArray = { ...this.state.numColsArray };
-  //   numColsArray[id] = numCols;
-  //   this.setState({ numColsArray });
-  // }
-
-  // colOptionsChanged(id, colOpts) {
-  //   var colOptsArray = { ...this.state.colOptsArray };
-  //   colOptsArray[id] = colOpts;
-  //   this.setState({ colOptsArray });
-  // }
-
-  // appendInput() {
-  //   var newInput = `${this.state.colIdArray.length}`;
-  //   this.setState(prevState => ({
-  //     colTypeArray: prevState.colTypeArray.concat(["integer"]),
-  //     numColsArray: prevState.numColsArray.concat([0]),
-  //     colOptsArray: prevState.colOptsArray.concat([""]),
-  //     colIdArray: prevState.colIdArray.concat([newInput])
-  //   }));
-  // }
-
-  // generateData(options) {
-  //   console.log(this.state);
-  //   // TO DO: two possible options for implementation (TBD):
-  //   //    (1) perform the data file export or (PROBABLY THIS OPTION)
-  //   //    (2) send the options as a paramter to a function in app.py to export the data
-  // }
-
   renderColInputs() {
     console.log(this.props.form.colIdArray);
     return this.props.form.colIdArray.map(id => {
@@ -50,9 +15,6 @@ class GeneratorForm extends Component {
         <GeneratorColumnInput
           id={id}
           key={id}
-        // dataTypeChanged={this.dataTypeChanged}
-        // numColsChanged={this.numColsChanged}
-        // colOptionsChanged={this.colOptionsChanged}
         />
       )
     })
@@ -140,7 +102,7 @@ const mapDispatchToProps = () => {
     exportConfig,
     setNumRows,
     setFileType,
-      generateData
+    generateData
   }
 }
 

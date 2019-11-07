@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import { connect } from 'react-redux';
 import { setOptsInt } from "../../actions/form";
+import CategoricalInput from "./CategoricalInput"
 
 class OptionsModal extends Component {
   constructor(props) {
@@ -25,6 +26,8 @@ class OptionsModal extends Component {
       isOpen: false
     };
   }
+
+
 
   handleDistributionChange = e => {
     // var dist = e.target.value;
@@ -90,13 +93,16 @@ class OptionsModal extends Component {
         var opts = {};
         this.props.setOptsInt(dist, opts, this.props.id);
       }
-      if (dist == "area-codes") {
+      else if (dist == "area-codes") {
         var areaCodes = document.getElementById(`area-codes-${this.props.id}`).value
         var opts = {
           areaCodes: areaCodes
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
+    }
+    else if (type == "categorical") {
+      console.log("submit categorical")
     }
     this.toggleModal()
   };
@@ -384,7 +390,7 @@ class OptionsModal extends Component {
                 <h5>Area Code</h5>
                 <FormGroup row>
                   <Col md={12}>
-                    <Label>Area Codes (comma separated list)</Label>
+                    <Label>Area Code</Label>
                     <Input
                       type="text"
                       name="state"
@@ -396,6 +402,30 @@ class OptionsModal extends Component {
                 </FormGroup>
               </Form>
             </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.handleModalSubmit}>
+                Confirm Options
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </div>
+      )
+      return modal_html;
+    } else if (this.props.type == "categorical") {
+      var modal_html = (
+        <div>
+          <Button color="secondary" onClick={this.toggleModal}>
+            Options
+          </Button>
+
+          <Modal
+            isOpen={this.state.isOpen}
+            toggle={this.toggleModal}
+            //   className={this.props.className}
+            unmountOnClose={false}
+          >
+            <ModalHeader toggle={this.toggleModal}>Categorical Options</ModalHeader>
+            <CategoricalInput id={this.props.id} />
             <ModalFooter>
               <Button color="primary" onClick={this.handleModalSubmit}>
                 Confirm Options

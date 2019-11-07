@@ -41,12 +41,16 @@ class GeneratorColumnInput extends Component {
             id={`type-${this.props.id}`}
             onChange={e => {
               this.props.setDataType(e.target.value, this.props.id);
+              console.log(this.props.form)
             }}
           >
             <option value="integer">Integer</option>
             <option value="float">Float</option>
             <option value="zip-code">Zip Code</option>
             <option value="phone">Phone Number</option>
+            <option value="categorical">Categorical</option>
+            <option value="time-series">Time-Series</option>
+            <option value="text">Text</option>
           </Input>
         </Col>
         <Col md={3}>
