@@ -21,6 +21,7 @@ export const GENERATE_DATA = "GENERATE_DATA";
 export const SET_OPTS_INT = "SET_OPS_INT";
 
 // CATEGORICAL DATA
+export const SET_CAT_DIST = "SET_CAT_DIST";
 export const SET_CAT_NAME = "SET_CAT_NAME";
 export const SET_CAT_PROB = "SET_CAT_PROB";
 export const ADD_CATEGORY = "ADD_CATEGORY";

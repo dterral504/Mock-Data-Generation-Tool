@@ -1,4 +1,4 @@
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB } from "../actions/types.js";
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST } from "../actions/types.js";
 
 var zipcodes = require('zipcodes');
 
@@ -322,6 +322,7 @@ export default function (state = initialState, action) {
                 var categoryProbArray = [0, 0]
                 var optsArr = state.colOptsArray.splice(0)
                 optsArr[action.payload.id] = {
+                    dist: "",
                     categoryIdArray: categoryIdArray,
                     categoryNameArray: categoryNameArray,
                     categoryProbArray, categoryProbArray
@@ -336,6 +337,18 @@ export default function (state = initialState, action) {
                 ...state,
                 colTypeArray: newArr
             };
+        case SET_CAT_DIST:
+            var newArr = action.payload.colOptsArray.splice(0)
+            var currOpts = newArr[action.payload.id]
+            var newOpts = {
+                ...currOpts,
+                dist: action.payload.dist
+            }
+            newArr[action.payload.id] = newOpts
+            return {
+                ...state,
+                colOptsArray: newArr
+            };
         case SET_CAT_NAME:
             var newArr = action.payload.colOptsArray.splice(0)
             var currOpts = newArr[action.payload.id]
@@ -343,6 +356,7 @@ export default function (state = initialState, action) {
             currNames[action.payload.catid] = action.payload.value
             var newOpts = {
                 ...currOpts,
+                dist: action.payload.dist,
                 categoryNameArray: currNames
             }
             newArr[action.payload.id] = newOpts
@@ -354,9 +368,10 @@ export default function (state = initialState, action) {
             var newArr = action.payload.colOptsArray.splice(0)
             var currOpts = newArr[action.payload.id]
             var currProbs = currOpts.categoryProbArray.splice(0)
-            currProbs[action.payload.catid] = action.payload.value
+            currProbs[action.payload.catid] = parseInt(action.payload.value)
             var newOpts = {
                 ...currOpts,
+                dist: action.payload.dist,
                 categoryProbArray: currProbs
             }
             newArr[action.payload.id] = newOpts
@@ -482,12 +497,25 @@ export default function (state = initialState, action) {
                     else if (types[i] == "categorical") {
                         if (colOpts[i].dist == "uniform") {
                             for (var k = 0; k < rows; k++) {
-
+                                var rand = Math.floor(Math.random() * colOpts[i].categoryIdArray.length)
+                                arr[k][currentCol] = colOpts[i].categoryNameArray[rand]
                             }
                         }
                         if (colOpts[i].dist == "multinomial") {
+                            var nameArr = colOpts[i].categoryNameArray
+                            var probArr = colOpts[i].categoryProbArray
+                            var catList = []
+                            var total = 0
+                            for (var x = 0; x < nameArr.length; x++) {
+                                var name = nameArr[x]
+                                for (var y = 0; y < probArr[x]; y++) {
+                                    catList.push(name)
+                                }
+                                total = total + probArr[x]
+                            }
                             for (var k = 0; k < rows; k++) {
-
+                                var rand = Math.floor(Math.random() * total)
+                                arr[k][currentCol] = catList[rand]
                             }
                         }
                     }

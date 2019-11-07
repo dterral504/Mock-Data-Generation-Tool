@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FormGroup, Col, Input, Label, Container, ModalBody, ModalFooter, Form, Button } from "reactstrap";
 import { connect } from "react-redux";
-import { addCategory, setOptsInt, setCategoryName, setCategoryProb } from "../../actions/form";
+import { addCategory, setOptsInt, setCategoryName, setCategoryProb, setCategoricalDist } from "../../actions/form";
 
 class CategoricalInput extends Component {
     constructor(props) {
@@ -15,8 +15,7 @@ class CategoricalInput extends Component {
     }
 
     handleDistributionChange = e => {
-        // var dist = e.target.value;
-        this.setState({ dist: e.target.value });
+        this.setState({ dist: e.target.value })
     };
 
 
@@ -31,7 +30,7 @@ class CategoricalInput extends Component {
                             name="name"
                             id={id}
                             onChange={e => {
-                                this.props.setCategoryName(this.props.form.colOptsArray, e.target.value, this.props.id, id);
+                                this.props.setCategoryName(this.props.form.colOptsArray, e.target.value, this.props.id, id, this.state.dist);
                             }}
                             disabled={this.state.dist == ""}
                         />
@@ -42,7 +41,7 @@ class CategoricalInput extends Component {
                             name="prob"
                             id={id}
                             onChange={e => {
-                                this.props.setCategoryProb(this.props.form.colOptsArray, e.target.value, this.props.id, id)
+                                this.props.setCategoryProb(this.props.form.colOptsArray, e.target.value, this.props.id, id, this.state.dist)
                             }}
                             disabled={this.state.dist != "multinomial"}
                         />
@@ -105,7 +104,8 @@ const mapDispatchToProps = () => {
         addCategory,
         setOptsInt,
         setCategoryName,
-        setCategoryProb
+        setCategoryProb,
+        setCategoricalDist
     }
 }
 
