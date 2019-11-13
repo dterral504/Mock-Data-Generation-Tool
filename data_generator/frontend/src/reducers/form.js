@@ -1,4 +1,4 @@
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME } from "../actions/types.js";
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME, IMPORT_CONFIG } from "../actions/types.js";
 
 var zipcodes = require('zipcodes');
 
@@ -74,8 +74,9 @@ export default function (state = initialState, action) {
             a.click();
             document.body.removeChild(a);
             return state;
-            break;
-
+        case IMPORT_CONFIG:
+            // you can access the JSON object here using action.payload.value
+            console.log("inside of import config");
         case SET_NUM_ROWS:
             return {
                 ...state,
