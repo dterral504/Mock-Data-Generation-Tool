@@ -1,6 +1,6 @@
 // import axios from 'axios';
 
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_DATA_TYPE, SET_NUM_COLS, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, SET_CAT_PROB, ADD_CATEGORY, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME } from './types';
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_DATA_TYPE, SET_NUM_COLS, IMPORT_CONFIG, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, SET_CAT_PROB, ADD_CATEGORY, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME } from './types';
 
 // GET LEADS
 export const addField = () => {
@@ -8,6 +8,16 @@ export const addField = () => {
         type: ADD_FIELD
     }
 };
+
+
+// IMPORT CONFIG
+export const importConfig = (value) => {
+    return {
+        type: IMPORT_CONFIG,
+        payload: { value }
+    }
+};
+
 
 // EXPORT CONFIG
 export const exportConfig = () => {

@@ -1,4 +1,4 @@
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME } from "../actions/types.js";
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, IMPORT_CONFIG, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME } from "../actions/types.js";
 
 var zipcodes = require('zipcodes');
 
@@ -66,6 +66,24 @@ function gaussianFloat(mean, stdev, sample_size){
     return ((stdev*(run_total - sample_size/2)/(sample_size/2))/2)*108 + mean
 }
 
+
+// function onChange(event) {
+//     var reader = new FileReader();
+//     reader.onload = onReaderLoad;
+//     reader.readAsText(event.target.files[0]);
+// }
+//
+// function onReaderLoad(event){
+//     console.log(event.target.result);
+//     var obj = JSON.parse(event.target.result);
+//     console.log(obj);
+//     // alert_data(obj.name, obj.family);
+// }
+
+// function alert_data(name, family){
+//     alert('Name : ' + name + ', Family : ' + family);
+// }
+
 export default function (state = initialState, action) {
     switch (action.type) {
         case ADD_FIELD:
@@ -76,6 +94,11 @@ export default function (state = initialState, action) {
                 colOptsArray: [...state.colOptsArray, {}],
                 colIdArray: [...state.colIdArray, state.colIdArray.length]
             };
+            break;
+
+        case IMPORT_CONFIG:
+            console.log(action.payload.value);
+            return state;
             break;
 
         case EXPORT_CONFIG:
