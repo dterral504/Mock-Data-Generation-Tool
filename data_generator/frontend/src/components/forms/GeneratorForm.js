@@ -9,7 +9,6 @@ import { addField, setNumRows, setFileType, exportConfig, generateData } from ".
 class GeneratorForm extends Component {
 
   renderColInputs() {
-    console.log(this.props.form.colIdArray);
     return this.props.form.colIdArray.map(id => {
       return (
         <GeneratorColumnInput

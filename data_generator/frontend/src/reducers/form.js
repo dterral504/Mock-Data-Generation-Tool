@@ -17,8 +17,6 @@ function correlation(x1, slope, intercept, stddev) {
     var y = slope * x1
     var normal_dist = gaussian(intercept, stddev);
     var err = normal_dist();
-    console.log("HERE!!!!!  " + y);
-    console.log("ERRRR   " + err);
     return y + err;
 }
 
@@ -65,7 +63,6 @@ export default function (state = initialState, action) {
             break;
 
         case EXPORT_CONFIG:
-            console.log(state);
 
             let contentType = "application/json;charset=utf-8;";
             var a = document.createElement('a');
@@ -196,7 +193,6 @@ export default function (state = initialState, action) {
             };
 
         case GENERATE_DATA:
-            console.log(state);
 
             var arr = [];
             var cols = state.numColsArray;
@@ -390,7 +386,6 @@ export default function (state = initialState, action) {
                 opts: action.payload.opts,
                 hasCorrelation: false
             }
-            console.log(newArr);
             return {
                 ...state,
                 colOptsArray: newArr

@@ -20,7 +20,6 @@ class CategoricalInput extends Component {
 
 
     renderCategoricalInputs() {
-        console.log(this.props.form)
         return this.props.form.colOptsArray[this.props.id].categoryIdArray.map(id => {
             return (
                 <FormGroup row key={id}>

@@ -37,7 +37,6 @@ class OptionsModal extends Component {
   handleModalSubmit = evt => {
     var type = this.props.form.colTypeArray[this.props.id];
     var dist = this.state.dist;
-    console.log("here");
     if (type == "integer") {
       if (dist == "uniform") {
         var opts = {
@@ -102,7 +101,6 @@ class OptionsModal extends Component {
       }
     }
     else if (type == "categorical") {
-      console.log("submit categorical")
     }
     this.toggleModal()
   };
