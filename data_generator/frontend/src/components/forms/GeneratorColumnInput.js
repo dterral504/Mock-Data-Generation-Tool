@@ -1,35 +1,18 @@
 import React, { Component } from "react";
 import { FormGroup, Col, Input } from "reactstrap";
 import OptionsModal from "./OptionsModal";
+import CorrelationModal from "./CorrelationModal";
 import { connect } from "react-redux";
 import { setNumCols, setDataType } from "../../actions/form";
 
 class GeneratorColumnInput extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      type: "integer",
+      num: 0
+    }
   }
-
-  // onDataTypeChange(event) {
-  //   this.setState({ dataType: event.target.value });
-  //   const { dataTypeChanged, id } = this.props;
-  //   dataTypeChanged(id, event.target.value);
-  // }
-
-  // onNumColsChange(event) {
-  //   this.setState({ numCols: event.target.value });
-  //   const { numColsChanged, id } = this.props;
-  //   numColsChanged(id, event.target.value);
-  // }
-
-  // onModalChange(opt1, opt2, opt3) {
-  //   var modalOptions = { ...this.state.modalOptions };
-  //   modalOptions.option1 = opt1;
-  //   modalOptions.option2 = opt2;
-  //   modalOptions.option3 = opt3;
-  //   this.setState({ modalOptions });
-  //   const { colOptionsChanged, id } = this.props;
-  //   colOptionsChanged(id, modalOptions);
-  // }
 
   render() {
     return (
@@ -41,12 +24,16 @@ class GeneratorColumnInput extends Component {
             id={`type-${this.props.id}`}
             onChange={e => {
               this.props.setDataType(e.target.value, this.props.id);
+              this.setState({ type: e.target.value });
             }}
           >
             <option value="integer">Integer</option>
             <option value="float">Float</option>
             <option value="zip-code">Zip Code</option>
             <option value="phone">Phone Number</option>
+            <option value="categorical">Categorical</option>
+            <option value="time-series">Time-Series</option>
+            <option value="text">Text</option>
           </Input>
         </Col>
         <Col md={3}>
@@ -56,15 +43,22 @@ class GeneratorColumnInput extends Component {
             id={`numcols-${this.props.id}`}
             onChange={e => {
               this.props.setNumCols(e.target.value, this.props.id);
+              this.setState({ num: parseInt(e.target.value) });
             }}
             placeholder="0"
           />
         </Col>
-        <Col md={2}>
+        <Col md={1}>
           <OptionsModal
             type={this.props.form.colTypeArray[this.props.id]}
-            // onModalChange={this.onModalChange}
             id={this.props.id}
+          />
+        </Col>
+        <Col md={3}>
+          <CorrelationModal
+            type={this.props.form.colTypeArray[this.props.id]}
+            id={this.props.id}
+            show={this.state.num == 1 && ((this.state.type == "integer") || (this.state.type == "float"))}
           />
         </Col>
       </FormGroup>

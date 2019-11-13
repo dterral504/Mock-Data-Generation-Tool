@@ -1,4 +1,4 @@
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT } from "../actions/types.js";
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL } from "../actions/types.js";
 
 var zipcodes = require('zipcodes');
 
@@ -9,6 +9,17 @@ const initialState = {
     numColsArray: [0],
     colOptsArray: [{}],
     colIdArray: [0]
+}
+
+
+
+function correlation(x1, slope, intercept, stddev) {
+    var y = slope * x1
+    var normal_dist = gaussian(intercept, stddev);
+    var err = normal_dist();
+    console.log("HERE!!!!!  " + y);
+    console.log("ERRRR   " + err);
+    return y + err;
 }
 
 
@@ -79,18 +90,111 @@ export default function (state = initialState, action) {
             };
         case SET_NUM_COLS:
             var newArr = state.numColsArray.splice(0)
-            newArr[action.payload.id] = parseInt(action.payload.value)
-            return {
-                ...state,
-                numColsArray: newArr
-            };
+            var newVal = parseInt(action.payload.value)
+            newArr[action.payload.id] = newVal
+            if (newVal != 1) {
+                return {
+                    ...state,
+                    numColsArray: newArr,
+                    hasCorrelation: false
+                };
+            } else {
+                return {
+                    ...state,
+                    numColsArray: newArr
+                };
+            }
+
         case SET_DATA_TYPE:
-            var newArr = state.colTypeArray.splice(0)
-            newArr[action.payload.id] = action.payload.value
+            var newTypeArr = state.colTypeArray.splice(0)
+            newTypeArr[action.payload.id] = action.payload.value
+            var newOptsArr = state.colOptsArray.splice(0)
+            if (action.payload.value == "categorical") {
+                var categoryIdArray = [0, 1]
+                var categoryNameArray = ["", ""]
+                var categoryProbArray = [0, 0]
+                newOptsArr[action.payload.id] = {
+                    dist: "",
+                    categoryIdArray: categoryIdArray,
+                    categoryNameArray: categoryNameArray,
+                    categoryProbArray, categoryProbArray,
+                    hasCorrelation: false
+                }
+                return {
+                    ...state,
+                    colTypeArray: newTypeArr,
+                    colOptsArray: newOptsArr
+                }
+            } else {
+                newOptsArr[action.payload.id] = {
+                    dist: "",
+                    hasCorrelation: false
+                }
+                return {
+                    ...state,
+                    colTypeArray: newTypeArr,
+                    colOptsArray: newOptsArr
+                };
+            }
+
+        case SET_CAT_DIST:
+            var newArr = action.payload.colOptsArray.splice(0)
+            var currOpts = newArr[action.payload.id]
+            var newOpts = {
+                ...currOpts,
+                dist: action.payload.dist
+            }
+            newArr[action.payload.id] = newOpts
             return {
                 ...state,
-                colTypeArray: newArr
+                colOptsArray: newArr
             };
+        case SET_CAT_NAME:
+            var newArr = action.payload.colOptsArray.splice(0)
+            var currOpts = newArr[action.payload.id]
+            var currNames = currOpts.categoryNameArray.splice(0)
+            currNames[action.payload.catid] = action.payload.value
+            var newOpts = {
+                ...currOpts,
+                dist: action.payload.dist,
+                categoryNameArray: currNames
+            }
+            newArr[action.payload.id] = newOpts
+            return {
+                ...state,
+                colOptsArray: newArr
+            };
+        case SET_CAT_PROB:
+            var newArr = action.payload.colOptsArray.splice(0)
+            var currOpts = newArr[action.payload.id]
+            var currProbs = currOpts.categoryProbArray.splice(0)
+            currProbs[action.payload.catid] = parseInt(action.payload.value)
+            var newOpts = {
+                ...currOpts,
+                dist: action.payload.dist,
+                categoryProbArray: currProbs
+            }
+            newArr[action.payload.id] = newOpts
+            return {
+                ...state,
+                colOptsArray: newArr
+            };
+
+        case ADD_CATEGORY:
+            var newArr = action.payload.colOptsArray.splice(0)
+            var currOpts = newArr[action.payload.id]
+            var newOpts = {
+                ...currOpts,
+                categoryIdArray: [...currOpts.categoryIdArray, currOpts.categoryIdArray.length],
+                categoryNameArray: [...currOpts.categoryNameArray, ""],
+                categoryProbArray: [...currOpts.categoryProbArray, 0]
+            }
+            newArr[action.payload.id] = newOpts
+            return {
+                ...state,
+                colOptsArray: newArr
+            };
+
         case GENERATE_DATA:
             console.log(state);
 
@@ -103,7 +207,11 @@ export default function (state = initialState, action) {
             var totalCols = 0;
             for (var i = 0; i < cols.length; i++) {
                 totalCols += cols[i];
+                if (colOpts[i].hasCorrelation == true) {
+                    totalCols++;
+                }
             }
+
 
             // initialize array
             for (var i = 0; i < rows; i++) {
@@ -115,37 +223,82 @@ export default function (state = initialState, action) {
             for (var i = 0; i < types.length; i++) {
                 for (var j = 0; j < cols[i]; j++) {
                     if (types[i] == "integer") {
-                        if (colOpts[i].dist == "uniform") {
-                            var min = Math.ceil(colOpts[i].opts.min);
-                            var max = Math.floor(colOpts[i].opts.max);
-                            for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = Math.floor(Math.random() * (max - min + 1)) + min;
+                        if (colOpts[i].hasCorrelation == false) {
+                            if (colOpts[i].dist == "uniform") {
+                                var min = Math.ceil(colOpts[i].opts.min);
+                                var max = Math.floor(colOpts[i].opts.max);
+                                for (var k = 0; k < rows; k++) {
+                                    arr[k][currentCol] = Math.floor(Math.random() * (max - min + 1)) + min;
+                                }
+                            } else if (colOpts[i].dist == "normal") {
+                                var mean = colOpts[i].opts.mean;
+                                var stdev = colOpts[i].opts.standard_deviation;
+                                var normal_dist = gaussian(mean, stdev);
+                                for (var k = 0; k < rows; k++) {
+                                    arr[k][currentCol] = Math.floor(normal_dist());
+                                }
                             }
-                        } else if (colOpts[i].dist == "normal") {
-                            var mean = colOpts[i].opts.mean;
-                            var stdev = colOpts[i].opts.standard_deviation;
-                            var normal_dist = gaussian(mean, stdev);
-                            for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = Math.floor(normal_dist());
+                        } else if (colOpts[i].hasCorrelation == true) {
+                            if (colOpts[i].dist == "uniform") {
+                                var min = Math.ceil(colOpts[i].opts.min);
+                                var max = Math.floor(colOpts[i].opts.max);
+                                for (var k = 0; k < rows; k++) {
+                                    var val = Math.random() * (max - min + 1) + min;
+                                    var correlatedVal = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
+                                    arr[k][currentCol] = Math.floor(val);
+                                    arr[k][currentCol + 1] = Math.floor(correlatedVal);
+                                }
+                            } else if (colOpts[i].dist == "normal") {
+                                var mean = colOpts[i].opts.mean;
+                                var stdev = colOpts[i].opts.standard_deviation;
+                                var normal_dist = gaussian(mean, stdev);
+                                for (var k = 0; k < rows; k++) {
+                                    var val = normal_dist();
+                                    var correlatedVal = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
+                                    arr[k][currentCol] = Math.floor(val);
+                                    arr[k][currentCol + 1] = Math.floor(correlatedVal);
+                                }
                             }
+                            currentCol++;
                         }
 
                     } else if (types[i] == "float") {
-                        if (colOpts[i].dist == "uniform") {
-                            var min = colOpts[i].opts.min;
-                            var max = colOpts[i].opts.max;
-                            for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = Math.random() * (max - min + 1) + min;
+                        if (colOpts[i].hasCorrelation == false) {
+                            if (colOpts[i].dist == "uniform") {
+                                var min = colOpts[i].opts.min;
+                                var max = colOpts[i].opts.max;
+                                for (var k = 0; k < rows; k++) {
+                                    arr[k][currentCol] = Math.random() * (max - min + 1) + min;
+                                }
+                            } else if (colOpts[i].dist == "normal") {
+                                var mean = colOpts[i].opts.mean;
+                                var stdev = colOpts[i].opts.standard_deviation;
+                                var normal_dist = gaussian(mean, stdev);
+                                for (var k = 0; k < rows; k++) {
+                                    arr[k][currentCol] = normal_dist();
+                                }
                             }
-                        } else if (colOpts[i].dist == "normal") {
-                            var mean = colOpts[i].opts.mean;
-                            var stdev = colOpts[i].opts.standard_deviation;
-                            var normal_dist = gaussian(mean, stdev);
-                            for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = normal_dist();
+                        } else if (colOpts[i].hasCorrelation == true) {
+                            if (colOpts[i].dist == "uniform") {
+                                var min = colOpts[i].opts.min;
+                                var max = colOpts[i].opts.max;
+                                for (var k = 0; k < rows; k++) {
+                                    var val = Math.random() * (max - min + 1) + min;
+                                    arr[k][currentCol] = val;
+                                    arr[k][currentCol + 1] = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
+                                }
+                            } else if (colOpts[i].dist == "normal") {
+                                var mean = colOpts[i].opts.mean;
+                                var stdev = colOpts[i].opts.standard_deviation;
+                                var normal_dist = gaussian(mean, stdev);
+                                for (var k = 0; k < rows; k++) {
+                                    var val = normal_dist();
+                                    arr[k][currentCol] = val;
+                                    arr[k][currentCol + 1] = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
+                                }
                             }
+                            currentCol++;
                         }
-
                     }
                     else if (types[i] == "zip-code") {
                         for (var k = 0; k < rows; k++) {
@@ -190,13 +343,38 @@ export default function (state = initialState, action) {
                             }
                         }
                     }
+                    else if (types[i] == "categorical") {
+                        if (colOpts[i].dist == "uniform") {
+                            for (var k = 0; k < rows; k++) {
+                                var rand = Math.floor(Math.random() * colOpts[i].categoryIdArray.length)
+                                arr[k][currentCol] = colOpts[i].categoryNameArray[rand]
+                            }
+                        }
+                        if (colOpts[i].dist == "multinomial") {
+                            var nameArr = colOpts[i].categoryNameArray
+                            var probArr = colOpts[i].categoryProbArray
+                            var catList = []
+                            var total = 0
+                            for (var x = 0; x < nameArr.length; x++) {
+                                var name = nameArr[x]
+                                for (var y = 0; y < probArr[x]; y++) {
+                                    catList.push(name)
+                                }
+                                total = total + probArr[x]
+                            }
+                            for (var k = 0; k < rows; k++) {
+                                var rand = Math.floor(Math.random() * total)
+                                arr[k][currentCol] = catList[rand]
+                            }
+                        }
+                    }
                     currentCol++;
                 }
             }
 
             contentType = "application/csv;charset=utf-8;";
             var a = document.createElement('a');
-            a.download = "config.csv";
+            a.download = "data.csv";
             a.href = 'data:' + contentType + ',' + arr.map(e => e.join(",")).join("\n");
             a.target = '_blank';
             document.body.appendChild(a);
@@ -209,9 +387,35 @@ export default function (state = initialState, action) {
             var newArr = state.colOptsArray.splice(0)
             newArr[action.payload.id] = {
                 dist: action.payload.dist,
-                opts: action.payload.opts
+                opts: action.payload.opts,
+                hasCorrelation: false
             }
             console.log(newArr);
+            return {
+                ...state,
+                colOptsArray: newArr
+            }
+        case SET_CORRELATION_OPTS:
+            var newArr = state.colOptsArray.splice(0)
+            var newOpts = newArr[action.payload.id]
+            newOpts = {
+                ...newOpts,
+                correlationOpts: action.payload.correlationOpts,
+                hasCorrelation: true
+            }
+            newArr[action.payload.id] = newOpts
+            return {
+                ...state,
+                colOptsArray: newArr
+            }
+        case REMOVE_CORRELATED_COL:
+            var newArr = state.colOptsArray.splice(0)
+            var newOpts = newArr[action.payload.id]
+            newOpts = {
+                ...newOpts,
+                hasCorrelation: false
+            }
+            newArr[action.payload.id] = newOpts
             return {
                 ...state,
                 colOptsArray: newArr
