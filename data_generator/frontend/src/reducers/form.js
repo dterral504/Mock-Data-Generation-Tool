@@ -51,6 +51,21 @@ function gaussian(mean, stdev) {
     }
 }
 
+/*  Algorithm adapted from: https://stackoverflow.com/a/33567961/466363
+    This function returns a float on a normal distribution.
+    To use: call for each number in the row with mean, stdev, and total samples
+    */
+function gaussianFloat(mean, stdev, sample_size){
+    if(!sample_size) sample_size = 100
+    if(!stdev) stdev = 1
+    if(!mean) mean=0
+
+    var run_total = 0
+    for(var i=0; i<sample_size; i++)
+       run_total += Math.random()
+    return ((stdev*(run_total - sample_size/2)/(sample_size/2))/2)*108 + mean
+}
+
 export default function (state = initialState, action) {
     switch (action.type) {
         case ADD_FIELD:
@@ -276,9 +291,9 @@ export default function (state = initialState, action) {
                             } else if (colOpts[i].dist == "normal") {
                                 var mean = colOpts[i].opts.mean;
                                 var stdev = colOpts[i].opts.standard_deviation;
-                                var normal_dist = gaussian(mean, stdev);
+                                console.log("float Uniform");
                                 for (var k = 0; k < rows; k++) {
-                                    arr[k][currentCol] = normal_dist();
+                                    arr[k][currentCol] = gaussianFloat(mean, stdev, rows);
                                 }
                             }
                         } else if (colOpts[i].hasCorrelation == true) {
@@ -293,9 +308,8 @@ export default function (state = initialState, action) {
                             } else if (colOpts[i].dist == "normal") {
                                 var mean = colOpts[i].opts.mean;
                                 var stdev = colOpts[i].opts.standard_deviation;
-                                var normal_dist = gaussian(mean, stdev);
                                 for (var k = 0; k < rows; k++) {
-                                    var val = normal_dist();
+                                    var val = gaussianFloat(mean, stdev, rows);
                                     arr[k][currentCol] = val;
                                     arr[k][currentCol + 1] = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
                                 }
