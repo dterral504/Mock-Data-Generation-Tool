@@ -65,7 +65,6 @@ class GeneratorForm extends Component {
               onChange={e => this.props.setFileType(e.target.value)}
             >
               <option>CSV</option>
-              <option>Excel</option>
               <option>JSON</option>
             </Input>
           </Col>

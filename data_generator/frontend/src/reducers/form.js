@@ -1,4 +1,4 @@
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST } from "../actions/types.js";
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL } from "../actions/types.js";
 
 var zipcodes = require('zipcodes');
 
@@ -11,234 +11,16 @@ const initialState = {
     colIdArray: [0]
 }
 
-// // ****************************************************************
-// // ****************************************************************
-// // ****************************************************************
 
-// var Sampling = SJS = (function(){
 
-//     // Utility functions
-//     function _sum(a, b) {
-// 	return a + b;
-//     };
-//     function _fillArrayWithNumber(size, num) {
-// 	// thanks be to stackOverflow... this is a beautiful one-liner
-// 	return Array.apply(null, Array(size)).map(Number.prototype.valueOf, num);
-//     };
-//     function _rangeFunc(upper) {
-// 	var i = 0, out = [];
-// 	while (i < upper) out.push(i++);
-// 	return out;
-//     };
-//     // Prototype function
-//     function _samplerFunction(size) {
-// 	if (!Number.isInteger(size) || size < 0) {
-// 	  throw new Error ("Number of samples must be a non-negative integer.");
-// 	}
-// 	if (!this.draw) {
-// 	    throw new Error ("Distribution must specify a draw function.");
-// 	}
-// 	var result = [];
-// 	while (size--) {
-// 	    result.push(this.draw());
-// 	}
-// 	return result;
-//     };
-//     // Prototype for discrete distributions
-//     var _samplerPrototype = {
-// 	sample: _samplerFunction
-//     };
-
-//     function Bernoulli(p) {
-
-// 	var result = Object.create(_samplerPrototype);
-
-// 	result.draw = function() {
-// 	    return (Math.random() < p) ? 1 : 0;
-// 	};
-
-// 	result.toString = function() {
-// 	    return "Bernoulli( " + p + " )";
-// 	};
-
-// 	return result;
-//     }
-
-//     function Binomial(n, p) {
-
-// 	var result = Object.create(_samplerPrototype),
-// 	bern = Sampling.Bernoulli(p);
-
-// 	result.draw = function() {
-// 	    return bern.sample(n).reduce(_sum, 0); // less space efficient than adding a bunch of draws, but cleaner :)
-// 	}
-
-// 	result.toString = function() { 
-// 	    return "Binom( " + 
-// 		[n, p].join(", ") + 
-// 		" )"; 
-// 	}
-
-// 	return result;
-//     }
-
-//     function Discrete(probs) { // probs should be an array of probabilities. (they get normalized automagically) //
-
-// 	var result = Object.create(_samplerPrototype),
-// 	k = probs.length;
-
-// 	result.draw = function() {
-// 	    var i, p;
-// 	    for (i = 0; i < k; i++) {
-// 		p = probs[i] / probs.slice(i).reduce(_sum, 0); // this is the (normalized) head of a slice of probs
-// 		if (Bernoulli(p).draw()) return i;             // using the truthiness of a Bernoulli draw
-// 	    }
-// 	    return k - 1;
-// 	};
-
-// 	result.sampleNoReplace = function(size) {
-// 	    if (size>probs.length) {
-// 		throw new Error("Sampling without replacement, and the sample size exceeds vector size.")
-// 	    }
-// 	    var disc, index, sum, samp = [];
-// 	    var currentProbs = probs;
-// 	    var live = _rangeFunc(probs.length);
-// 	    while (size--) {
-// 		sum = currentProbs.reduce(_sum, 0);
-// 		currentProbs = currentProbs.map(function(x) {return x/sum; });
-// 		disc = SJS.Discrete(currentProbs);
-// 		index = disc.draw();
-// 		samp.push(live[index]);
-// 		live.splice(index, 1);
-// 		currentProbs.splice(index, 1);
-// 		sum = currentProbs.reduce(_sum, 0);
-// 		currentProbs = currentProbs.map(function(x) {return x/sum; });
-// 	    }
-// 	    currentProbs = probs;
-// 	    live = _rangeFunc(probs.length);
-// 	    return samp;
-// 	}
-
-// 	result.toString = function() {
-// 	    return "Dicrete( [" + 
-// 		probs.join(", ") + 
-// 		"] )";
-// 	};
-
-// 	return result;
-//     }
-
-//     function Multinomial(n, probs) {
-
-// 	var result = Object.create(_samplerPrototype),
-// 	k = probs.length,
-// 	disc = Discrete(probs);
-
-// 	result.draw = function() {
-// 	    var draw_result = _fillArrayWithNumber(k, 0),
-// 	    i = n;
-// 	    while (i--) {
-// 		draw_result[disc.draw()] += 1;
-// 	    }
-// 	    return draw_result;
-// 	};
-
-// 	result.toString = function() {
-// 	    return "Multinom( " + 
-// 		n + 
-// 		", [" + probs.join(", ") + 
-// 		"] )";
-// 	};
-
-// 	return result;
-//     }
-
-//     function NegBinomial(r, p) {
-// 	var result = Object.create(_samplerPrototype);
-
-// 	result.draw = function() {
-// 	    var draw_result = 0, failures = r;
-// 	    while (failures) {
-// 		Bernoulli(p).draw() ? draw_result++ : failures--;
-// 	    }
-// 	    return draw_result;
-// 	};
-
-// 	result.toString = function() {
-// 	    return "NegBinomial( " +  r +
-// 		", " + p + " )";
-// 	};
-
-// 	return result;
-//     }
-
-//     function Poisson(lambda) {
-// 	var result = Object.create(_samplerPrototype);
-
-// 	result.draw = function() {
-// 	    var draw_result, L = Math.exp(- lambda), k = 0, p = 1;
-
-// 	    do {
-// 		k++;
-// 		p = p * Math.random()
-// 	    } while (p > L);
-// 	    return k-1;
-// 	}
-
-// 	result.toString = function() {
-// 	    return "Poisson( " + lambda + " )";
-// 	}
-
-// 	return result;
-//     }
-
-//     return {
-// 	_fillArrayWithNumber: _fillArrayWithNumber, // REMOVE EVENTUALLY - this is just so the Array.prototype mod can work
-// 	_rangeFunc: _rangeFunc,
-// 	Bernoulli: Bernoulli,
-// 	Binomial: Binomial,
-// 	Discrete: Discrete,
-// 	Multinomial: Multinomial,
-// 	NegBinomial: NegBinomial,
-// 	Poisson: Poisson
-//     };
-// })();
-
-// //*** Sampling from arrays ***//
-// // Eventually merge into SJS ???
-// function sample_from_array(array, numSamples, withReplacement) {
-//     var n = numSamples || 1,
-//     result = [],
-//     copy,
-//     disc,
-//     index;
-
-//     if (!withReplacement && numSamples > array.length) {
-// 	throw new Error("Sampling without replacement, and the sample size exceeds vector size.")
-//     }
-
-//     if (withReplacement) {
-// 	while(numSamples--) {
-// 	    disc = SJS.Discrete(SJS._fillArrayWithNumber(array.length, 1));
-// 	    result.push(array[disc.draw()]);
-// 	}
-//     } else {
-// 	// instead of splicing, consider sampling from an array of possible indices? meh?
-// 	copy = array.slice(0);
-// 	while (numSamples--) {
-// 	    disc = SJS.Discrete(SJS._fillArrayWithNumber(copy.length, 1));
-// 	    index = disc.draw();
-// 	    result.push(copy[index]);
-// 	    copy.splice(index, 1);
-// 	    console.log("array: "+copy);
-// 	}	
-//     }
-//     return result;
-// }
-
-// ****************************************************************
-// ****************************************************************
-// ****************************************************************
+function correlation(x1, slope, intercept, stddev) {
+    var y = slope * x1
+    var normal_dist = gaussian(intercept, stddev);
+    var err = normal_dist();
+    console.log("HERE!!!!!  " + y);
+    console.log("ERRRR   " + err);
+    return y + err;
+}
 
 
 function gaussian(mean, stdev) {
@@ -308,35 +90,53 @@ export default function (state = initialState, action) {
             };
         case SET_NUM_COLS:
             var newArr = state.numColsArray.splice(0)
-            newArr[action.payload.id] = parseInt(action.payload.value)
-            return {
-                ...state,
-                numColsArray: newArr
-            };
+            var newVal = parseInt(action.payload.value)
+            newArr[action.payload.id] = newVal
+            if (newVal != 1) {
+                return {
+                    ...state,
+                    numColsArray: newArr,
+                    hasCorrelation: false
+                };
+            } else {
+                return {
+                    ...state,
+                    numColsArray: newArr
+                };
+            }
+
         case SET_DATA_TYPE:
-            var newArr = state.colTypeArray.splice(0)
-            newArr[action.payload.id] = action.payload.value
+            var newTypeArr = state.colTypeArray.splice(0)
+            newTypeArr[action.payload.id] = action.payload.value
+            var newOptsArr = state.colOptsArray.splice(0)
             if (action.payload.value == "categorical") {
                 var categoryIdArray = [0, 1]
                 var categoryNameArray = ["", ""]
                 var categoryProbArray = [0, 0]
-                var optsArr = state.colOptsArray.splice(0)
-                optsArr[action.payload.id] = {
+                newOptsArr[action.payload.id] = {
                     dist: "",
                     categoryIdArray: categoryIdArray,
                     categoryNameArray: categoryNameArray,
-                    categoryProbArray, categoryProbArray
+                    categoryProbArray, categoryProbArray,
+                    hasCorrelation: false
                 }
                 return {
                     ...state,
-                    colTypeArray: newArr,
-                    colOptsArray: optsArr
+                    colTypeArray: newTypeArr,
+                    colOptsArray: newOptsArr
                 }
+            } else {
+                newOptsArr[action.payload.id] = {
+                    dist: "",
+                    hasCorrelation: false
+                }
+                return {
+                    ...state,
+                    colTypeArray: newTypeArr,
+                    colOptsArray: newOptsArr
+                };
             }
-            return {
-                ...state,
-                colTypeArray: newArr
-            };
+
         case SET_CAT_DIST:
             var newArr = action.payload.colOptsArray.splice(0)
             var currOpts = newArr[action.payload.id]
@@ -407,7 +207,11 @@ export default function (state = initialState, action) {
             var totalCols = 0;
             for (var i = 0; i < cols.length; i++) {
                 totalCols += cols[i];
+                if (colOpts[i].hasCorrelation == true) {
+                    totalCols++;
+                }
             }
+
 
             // initialize array
             for (var i = 0; i < rows; i++) {
@@ -419,37 +223,82 @@ export default function (state = initialState, action) {
             for (var i = 0; i < types.length; i++) {
                 for (var j = 0; j < cols[i]; j++) {
                     if (types[i] == "integer") {
-                        if (colOpts[i].dist == "uniform") {
-                            var min = Math.ceil(colOpts[i].opts.min);
-                            var max = Math.floor(colOpts[i].opts.max);
-                            for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = Math.floor(Math.random() * (max - min + 1)) + min;
+                        if (colOpts[i].hasCorrelation == false) {
+                            if (colOpts[i].dist == "uniform") {
+                                var min = Math.ceil(colOpts[i].opts.min);
+                                var max = Math.floor(colOpts[i].opts.max);
+                                for (var k = 0; k < rows; k++) {
+                                    arr[k][currentCol] = Math.floor(Math.random() * (max - min + 1)) + min;
+                                }
+                            } else if (colOpts[i].dist == "normal") {
+                                var mean = colOpts[i].opts.mean;
+                                var stdev = colOpts[i].opts.standard_deviation;
+                                var normal_dist = gaussian(mean, stdev);
+                                for (var k = 0; k < rows; k++) {
+                                    arr[k][currentCol] = Math.floor(normal_dist());
+                                }
                             }
-                        } else if (colOpts[i].dist == "normal") {
-                            var mean = colOpts[i].opts.mean;
-                            var stdev = colOpts[i].opts.standard_deviation;
-                            var normal_dist = gaussian(mean, stdev);
-                            for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = Math.floor(normal_dist());
+                        } else if (colOpts[i].hasCorrelation == true) {
+                            if (colOpts[i].dist == "uniform") {
+                                var min = Math.ceil(colOpts[i].opts.min);
+                                var max = Math.floor(colOpts[i].opts.max);
+                                for (var k = 0; k < rows; k++) {
+                                    var val = Math.random() * (max - min + 1) + min;
+                                    var correlatedVal = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
+                                    arr[k][currentCol] = Math.floor(val);
+                                    arr[k][currentCol + 1] = Math.floor(correlatedVal);
+                                }
+                            } else if (colOpts[i].dist == "normal") {
+                                var mean = colOpts[i].opts.mean;
+                                var stdev = colOpts[i].opts.standard_deviation;
+                                var normal_dist = gaussian(mean, stdev);
+                                for (var k = 0; k < rows; k++) {
+                                    var val = normal_dist();
+                                    var correlatedVal = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
+                                    arr[k][currentCol] = Math.floor(val);
+                                    arr[k][currentCol + 1] = Math.floor(correlatedVal);
+                                }
                             }
+                            currentCol++;
                         }
 
                     } else if (types[i] == "float") {
-                        if (colOpts[i].dist == "uniform") {
-                            var min = colOpts[i].opts.min;
-                            var max = colOpts[i].opts.max;
-                            for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = Math.random() * (max - min + 1) + min;
+                        if (colOpts[i].hasCorrelation == false) {
+                            if (colOpts[i].dist == "uniform") {
+                                var min = colOpts[i].opts.min;
+                                var max = colOpts[i].opts.max;
+                                for (var k = 0; k < rows; k++) {
+                                    arr[k][currentCol] = Math.random() * (max - min + 1) + min;
+                                }
+                            } else if (colOpts[i].dist == "normal") {
+                                var mean = colOpts[i].opts.mean;
+                                var stdev = colOpts[i].opts.standard_deviation;
+                                var normal_dist = gaussian(mean, stdev);
+                                for (var k = 0; k < rows; k++) {
+                                    arr[k][currentCol] = normal_dist();
+                                }
                             }
-                        } else if (colOpts[i].dist == "normal") {
-                            var mean = colOpts[i].opts.mean;
-                            var stdev = colOpts[i].opts.standard_deviation;
-                            var normal_dist = gaussian(mean, stdev);
-                            for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = normal_dist();
+                        } else if (colOpts[i].hasCorrelation == true) {
+                            if (colOpts[i].dist == "uniform") {
+                                var min = colOpts[i].opts.min;
+                                var max = colOpts[i].opts.max;
+                                for (var k = 0; k < rows; k++) {
+                                    var val = Math.random() * (max - min + 1) + min;
+                                    arr[k][currentCol] = val;
+                                    arr[k][currentCol + 1] = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
+                                }
+                            } else if (colOpts[i].dist == "normal") {
+                                var mean = colOpts[i].opts.mean;
+                                var stdev = colOpts[i].opts.standard_deviation;
+                                var normal_dist = gaussian(mean, stdev);
+                                for (var k = 0; k < rows; k++) {
+                                    var val = normal_dist();
+                                    arr[k][currentCol] = val;
+                                    arr[k][currentCol + 1] = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
+                                }
                             }
+                            currentCol++;
                         }
-
                     }
                     else if (types[i] == "zip-code") {
                         for (var k = 0; k < rows; k++) {
@@ -538,9 +387,35 @@ export default function (state = initialState, action) {
             var newArr = state.colOptsArray.splice(0)
             newArr[action.payload.id] = {
                 dist: action.payload.dist,
-                opts: action.payload.opts
+                opts: action.payload.opts,
+                hasCorrelation: false
             }
             console.log(newArr);
+            return {
+                ...state,
+                colOptsArray: newArr
+            }
+        case SET_CORRELATION_OPTS:
+            var newArr = state.colOptsArray.splice(0)
+            var newOpts = newArr[action.payload.id]
+            newOpts = {
+                ...newOpts,
+                correlationOpts: action.payload.correlationOpts,
+                hasCorrelation: true
+            }
+            newArr[action.payload.id] = newOpts
+            return {
+                ...state,
+                colOptsArray: newArr
+            }
+        case REMOVE_CORRELATED_COL:
+            var newArr = state.colOptsArray.splice(0)
+            var newOpts = newArr[action.payload.id]
+            newOpts = {
+                ...newOpts,
+                hasCorrelation: false
+            }
+            newArr[action.payload.id] = newOpts
             return {
                 ...state,
                 colOptsArray: newArr
