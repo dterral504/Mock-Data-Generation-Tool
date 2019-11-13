@@ -5,12 +5,11 @@ export const ADD_LEAD = "ADD_LEAD";
 
 // FORM
 export const ADD_FIELD = "ADD_FIELD";
-
 // export const IMPORT_CONFIG = "IMPORT_CONFIG";
 export const EXPORT_CONFIG = "EXPORT_CONFIG";
-
 export const SET_NUM_ROWS = "SET_NUM_ROWS";
 export const SET_FILE_TYPE = "SET_FILE_TYPE";
+export const SET_FILE_NAME = "SET_FILE_NAME";
 
 // COLUMN INPUT
 export const SET_DATA_TYPE = "SET_DATA_TYPE";

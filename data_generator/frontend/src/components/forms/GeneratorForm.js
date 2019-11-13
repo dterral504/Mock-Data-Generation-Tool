@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Form, Button, Input, Label, Col, Row, FormGroup } from "reactstrap";
 import GeneratorColumnInput from "./GeneratorColumnInput";
 
-import { addField, setNumRows, setFileType, exportConfig, generateData } from "../../actions/form";
+import { addField, setNumRows, setFileType, setFileName, exportConfig, generateData } from "../../actions/form";
 
 
 class GeneratorForm extends Component {
@@ -55,6 +55,19 @@ class GeneratorForm extends Component {
               }}
             />
           </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Col md={3}>
+            <Label>File Name</Label>
+            <Input
+              type="text"
+              name="filename"
+              id="filename"
+              onChange={e => {
+                this.props.setFileName(e.target.value);
+              }}
+            />
+          </Col>
           <Col md={2}>
             <Label>File Format</Label>
             <Input
@@ -100,6 +113,7 @@ const mapDispatchToProps = () => {
     exportConfig,
     setNumRows,
     setFileType,
+    setFileName,
     generateData
   }
 }
