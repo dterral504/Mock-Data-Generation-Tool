@@ -375,15 +375,17 @@ export default function (state = initialState, action) {
                     }
                     else if (types[i] == "date-time") {
                         if (colOpts[i].dist == "date") {
-                            var date = "12/25/1995";
+                            var start = new Date("December 17, 1995");
+                            var end = new Date("December 20, 1995");
                             for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = moment(date, "MM-DD-YYYY").add(k,'day').format('LL');
+                                arr[k][currentCol] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
                             }
                         }
                         if (colOpts[i].dist == "timestamp") {
-                            var date = "12/25/1995 4:30";
+                            var start = new Date("December 17, 1995 03:00:00");
+                            var end = new Date("December 20, 1995 05:00:00");
                             for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = moment(date, "MM-DD-YYYY HH:mm").add(k,'hour').format('LLL');
+                                arr[k][currentCol] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
                             }
                         }
                     }
