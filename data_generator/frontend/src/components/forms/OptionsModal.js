@@ -105,9 +105,20 @@ class OptionsModal extends Component {
     }
     else if (type == "date-time") {
       if (dist == "date") {
+        var opts = {
+          startDate: document.getElementById(`start-date-${this.props.id}`).value,
+            endDate: document.getElementById(`end-date-${this.props.id}`).value
+        };
+        this.props.setOptsInt(dist, opts, this.props.id);
       }
       else if (dist == "timestamp") {
-
+          var opts = {
+              startDate: document.getElementById(`start-date-${this.props.id}`).value,
+              endDate: document.getElementById(`end-date-${this.props.id}`).value,
+              startTime: document.getElementById(`start-time-${this.props.id}`).value,
+              endTime: document.getElementById(`end-time-${this.props.id}`).value,
+          };
+          this.props.setOptsInt(dist, opts, this.props.id);
       }
     }
     this.toggleModal()

@@ -1,6 +1,5 @@
 import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME, IMPORT_CONFIG } from "../actions/types.js";
 
-var moment = require('moment');
 var zipcodes = require('zipcodes');
 
 const initialState = {
@@ -375,15 +374,15 @@ export default function (state = initialState, action) {
                     }
                     else if (types[i] == "date-time") {
                         if (colOpts[i].dist == "date") {
-                            var start = new Date("December 17, 1995");
-                            var end = new Date("December 20, 1995");
+                            var start = new Date(colOpts[i].opts.startDate);
+                            var end = new Date(colOpts[i].opts.endDate);
                             for (var k = 0; k < rows; k++) {
                                 arr[k][currentCol] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
                             }
                         }
                         if (colOpts[i].dist == "timestamp") {
-                            var start = new Date("December 17, 1995 03:00:00");
-                            var end = new Date("December 20, 1995 05:00:00");
+                            var start = new Date(colOpts[i].opts.startDate + " " + colOpts[i].opts.startTime);
+                            var end = new Date(colOpts[i].opts.endDate + " " + colOpts[i].opts.endTime);
                             for (var k = 0; k < rows; k++) {
                                 arr[k][currentCol] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
                             }
