@@ -1,10 +1,11 @@
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL } from "../actions/types.js";
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME } from "../actions/types.js";
 
 var zipcodes = require('zipcodes');
 
 const initialState = {
     numRows: 0,
     fileType: "CSV",
+    fileName: "data",
     colTypeArray: ["integer"],
     numColsArray: [0],
     colOptsArray: [{}],
@@ -66,7 +67,7 @@ export default function (state = initialState, action) {
 
             let contentType = "application/json;charset=utf-8;";
             var a = document.createElement('a');
-            a.download = "config.json";
+            a.download = state.fileName + "_config.json";
             a.href = 'data:' + contentType + ',' + encodeURIComponent(JSON.stringify(state));
             a.target = '_blank';
             document.body.appendChild(a);
@@ -85,6 +86,11 @@ export default function (state = initialState, action) {
                 ...state,
                 fileType: action.payload.value
             };
+        case SET_FILE_NAME:
+            return {
+                ...state,
+                fileName: action.payload.value
+            }
         case SET_NUM_COLS:
             var newArr = state.numColsArray.splice(0)
             var newVal = parseInt(action.payload.value)
@@ -199,6 +205,7 @@ export default function (state = initialState, action) {
             var rows = state.numRows;
             var types = state.colTypeArray;
             var colOpts = state.colOptsArray;
+            var fileType = state.fileType;
 
             var totalCols = 0;
             for (var i = 0; i < cols.length; i++) {
@@ -370,7 +377,7 @@ export default function (state = initialState, action) {
 
             contentType = "application/csv;charset=utf-8;";
             var a = document.createElement('a');
-            a.download = "data.csv";
+            a.download = state.fileName + ".csv";
             a.href = 'data:' + contentType + ',' + arr.map(e => e.join(",")).join("\n");
             a.target = '_blank';
             document.body.appendChild(a);
