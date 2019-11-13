@@ -8,11 +8,11 @@ import {
     Button,
     Form,
     FormGroup,
-    Label,
-    Tooltip
+    Label
 } from "reactstrap";
 import { connect } from 'react-redux';
 import { setCorrelationOpts, removeCorrelatedCol } from "../../actions/form";
+import SimpleTooltip from "./SimpleTooltip";
 
 class CorrelationModal extends Component {
     constructor(props) {
@@ -51,66 +51,135 @@ class CorrelationModal extends Component {
 
     render() {
         if (this.state.isSet == false) {
-            var modal_html = (
-                <div>
+            if (this.props.show == false) {
+                var modal_html = (
+                    <div>
+                        <span id="add-correlation">
+                            <Button outline color="info" onClick={e => { if (true) return }}>
+                                Add Correlated Column
+                            </Button>
+                        </span>
+                        <SimpleTooltip placement="right" target="add-correlation" >
+                            To add a correlated column, you must have:
+                            (1) Number of Columns = 1 and (2) Column Data Type = Integer or Float.
+                        </SimpleTooltip>
 
-                    <Button color="info" onClick={this.toggleModal} disabled={this.props.show == false}>
-                        Add Correlated Column
-                    </Button>
-                    <Modal
-                        isOpen={this.state.isOpen}
-                        toggle={this.toggleModal}
-                        unmountOnClose={false}
-                    >
-                        <ModalHeader toggle={this.toggleModal}>Correlated Column Options</ModalHeader>
-                        <ModalBody>
-                            <Form>
-                                <FormGroup>
-                                    <Label>Slope</Label>
-                                    <Input
-                                        type="number"
-                                        name="slope"
-                                        id={`slope-${this.props.id}`}
-                                        onChange={e => {
-                                            this.setState({ slope: parseInt(e.target.value) });
-                                        }}
-                                    >
-                                    </Input>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label>Intercept</Label>
-                                    <Input
-                                        type="number"
-                                        name="intercept"
-                                        id={`intercept-${this.props.id}`}
-                                        onChange={e => {
-                                            this.setState({ intercept: parseInt(e.target.value) });
-                                        }}
-                                    >
-                                    </Input>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label>Standard Deviation (Error)</Label>
-                                    <Input
-                                        type="number"
-                                        name="stddev"
-                                        id={`stddev-${this.props.id}`}
-                                        onChange={e => {
-                                            this.setState({ stddev: parseInt(e.target.value) });
-                                        }}
-                                    >
-                                    </Input>
-                                </FormGroup>
-                            </Form>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="primary" onClick={this.handleModalSubmit}>
-                                Confirm Options
-                                </Button>
-                        </ModalFooter>
-                    </Modal>
-                </div >
-            )
+                        <Modal
+                            isOpen={this.state.isOpen}
+                            toggle={this.toggleModal}
+                            unmountOnClose={false}
+                        >
+                            <ModalHeader toggle={this.toggleModal}>Correlated Column Options</ModalHeader>
+                            <ModalBody>
+                                <Form>
+                                    <FormGroup>
+                                        <Label>Slope</Label>
+                                        <Input
+                                            type="number"
+                                            name="slope"
+                                            id={`slope-${this.props.id}`}
+                                            onChange={e => {
+                                                this.setState({ slope: parseInt(e.target.value) });
+                                            }}
+                                        >
+                                        </Input>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label>Intercept</Label>
+                                        <Input
+                                            type="number"
+                                            name="intercept"
+                                            id={`intercept-${this.props.id}`}
+                                            onChange={e => {
+                                                this.setState({ intercept: parseInt(e.target.value) });
+                                            }}
+                                        >
+                                        </Input>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label>Standard Deviation (Error)</Label>
+                                        <Input
+                                            type="number"
+                                            name="stddev"
+                                            id={`stddev-${this.props.id}`}
+                                            onChange={e => {
+                                                this.setState({ stddev: parseInt(e.target.value) });
+                                            }}
+                                        >
+                                        </Input>
+                                    </FormGroup>
+                                </Form>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="primary" onClick={this.handleModalSubmit}>
+                                    Confirm Options
+                                    </Button>
+                            </ModalFooter>
+                        </Modal>
+                    </div >
+                )
+            } else {
+                var modal_html = (
+                    <div>
+                        <Button color="info" onClick={this.toggleModal} disabled={this.props.show == false}>
+                            Add Correlated Column
+                        </Button>
+
+                        <Modal
+                            isOpen={this.state.isOpen}
+                            toggle={this.toggleModal}
+                            unmountOnClose={false}
+                        >
+                            <ModalHeader toggle={this.toggleModal}>Correlated Column Options</ModalHeader>
+                            <ModalBody>
+                                <Form>
+                                    <FormGroup>
+                                        <Label>Slope</Label>
+                                        <Input
+                                            type="number"
+                                            name="slope"
+                                            id={`slope-${this.props.id}`}
+                                            onChange={e => {
+                                                this.setState({ slope: parseInt(e.target.value) });
+                                            }}
+                                        >
+                                        </Input>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label>Intercept</Label>
+                                        <Input
+                                            type="number"
+                                            name="intercept"
+                                            id={`intercept-${this.props.id}`}
+                                            onChange={e => {
+                                                this.setState({ intercept: parseInt(e.target.value) });
+                                            }}
+                                        >
+                                        </Input>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label>Standard Deviation (Error)</Label>
+                                        <Input
+                                            type="number"
+                                            name="stddev"
+                                            id={`stddev-${this.props.id}`}
+                                            onChange={e => {
+                                                this.setState({ stddev: parseInt(e.target.value) });
+                                            }}
+                                        >
+                                        </Input>
+                                    </FormGroup>
+                                </Form>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="primary" onClick={this.handleModalSubmit}>
+                                    Confirm Options
+                                    </Button>
+                            </ModalFooter>
+                        </Modal>
+                    </div >
+                )
+            }
         } else if (this.state.isSet == true) {
             var modal_html = (
                 <div>

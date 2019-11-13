@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormGroup, Col, Input } from "reactstrap";
+import { FormGroup, Col, Input, Button } from "reactstrap";
 import OptionsModal from "./OptionsModal";
 import CorrelationModal from "./CorrelationModal";
 import { connect } from "react-redux";
@@ -17,6 +17,11 @@ class GeneratorColumnInput extends Component {
   render() {
     return (
       <FormGroup row>
+        <Col md={1}>
+          <Button outline color="danger">
+            Delete
+          </Button>
+        </Col>
         <Col md={3}>
           <Input
             type="select"
@@ -32,7 +37,7 @@ class GeneratorColumnInput extends Component {
             <option value="zip-code">Zip Code</option>
             <option value="phone">Phone Number</option>
             <option value="categorical">Categorical</option>
-            <option value="time-series">Time-Series</option>
+            <option value="date-time">Date-Time</option>
             <option value="text">Text</option>
           </Input>
         </Col>
