@@ -372,6 +372,22 @@ export default function (state = initialState, action) {
                             }
                         }
                     }
+                    else if (types[i] == "date-time") {
+                        if (colOpts[i].dist == "date") {
+                            var start = new Date(colOpts[i].opts.startDate);
+                            var end = new Date(colOpts[i].opts.endDate);
+                            for (var k = 0; k < rows; k++) {
+                                arr[k][currentCol] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+                            }
+                        }
+                        if (colOpts[i].dist == "timestamp") {
+                            var start = new Date(colOpts[i].opts.startDate + " " + colOpts[i].opts.startTime);
+                            var end = new Date(colOpts[i].opts.endDate + " " + colOpts[i].opts.endTime);
+                            for (var k = 0; k < rows; k++) {
+                                arr[k][currentCol] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+                            }
+                        }
+                    }
                     currentCol++;
                 }
             }
