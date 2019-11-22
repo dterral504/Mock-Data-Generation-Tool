@@ -166,7 +166,6 @@ export default function (state = initialState, action) {
                     dist: "",
                     categoryIdArray: categoryIdArray,
                     categoryNameArray: categoryNameArray,
-                    categoryProbArray, categoryProbArray,
                     hasCorrelation: false
                 }
                 return {

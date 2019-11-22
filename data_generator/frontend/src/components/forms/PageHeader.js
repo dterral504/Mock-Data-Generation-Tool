@@ -11,19 +11,14 @@ class PageHeader extends Component {
     this.importConfiguration = this.importConfiguration.bind(this);
   }
 
-  file;
   importConfiguration(event) {
     var reader = new FileReader();
-    this.file = event.target.files[0];
-
-    const scope = this
+    const scope = this;
     reader.onload = function load(event) {
       var contents = JSON.parse(event.target.result);
-      // console.log(contents);
       scope.setState({ importedConfig: contents });
     };
     reader.readAsText(event.target.files[0]);
-    // console.log(event.target.files[0].result);
   }
 
 

@@ -5,10 +5,11 @@ import GeneratorColumnInput from "./GeneratorColumnInput";
 
 import { addField, setNumRows, setFileType, setFileName, exportConfig, generateData } from "../../actions/form";
 
-
 class GeneratorForm extends Component {
 
   renderColInputs() {
+    // console.log(this.props.form.colIdArray);
+    // console.log(this.props.form);
     return this.props.form.colIdArray.map(id => {
       return (
         <GeneratorColumnInput
@@ -21,7 +22,15 @@ class GeneratorForm extends Component {
   }
 
   render() {
-    return (
+    // console.log(this.props.id);
+    // console.log(this.props.form);
+    // this.state.type = this.props.form.colTypeArray[this.props.id];
+
+    // console.log(this.state);
+    // this.setState(this.state);
+    // this.state = this.props.form;
+
+      return (
       <Form>
         <h5>Column Options</h5>
         <hr />

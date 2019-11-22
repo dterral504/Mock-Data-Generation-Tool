@@ -8,13 +8,36 @@ import { setNumCols, setDataType } from "../../actions/form";
 class GeneratorColumnInput extends Component {
   constructor(props) {
     super(props);
+      console.log(this.props.form.colTypeArray[this.props.id]);
     this.state = {
-      type: "integer",
+      type: this.props.form.colTypeArray[this.props.id],
       num: 0
     }
   }
 
   render() {
+      // console.log(this.props.id);
+      // console.log(this.props.form);
+      // this.state.type = this.props.form.colTypeArray[this.props.id];
+      //
+      // console.log(this.state);
+      // this.setState(this.state);
+      var numCols = document.getElementById(`numcols-${this.props.id}`);
+      if (numCols !== null) {
+          for (var i = 0; i < this.props.form.numColsArray.length; i++) {
+              numCols = document.getElementById(`numcols-${i}`);
+              numCols.value = this.props.form.numColsArray[i];
+          }
+      }
+
+      var colTypes = document.getElementById(`type-${this.props.id}`);
+      if (numCols !== null) {
+          for (var i = 0; i < this.props.form.numColsArray.length; i++) {
+              colTypes = document.getElementById(`type-${i}`);
+              colTypes.value = this.props.form.colTypeArray[i];
+          }
+      }
+
     return (
       <FormGroup row>
         <Col md={3}>
@@ -31,7 +54,7 @@ class GeneratorColumnInput extends Component {
             <option value="float">Float</option>
             <option value="zip-code">Zip Code</option>
             <option value="phone">Phone Number</option>
-            <option value="categorical">Categorical</option>
+            <option value="categorical">Categorical</option>s
             <option value="time-series">Time-Series</option>
             <option value="text">Text</option>
           </Input>
