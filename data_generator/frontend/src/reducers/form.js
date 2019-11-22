@@ -97,9 +97,17 @@ export default function (state = initialState, action) {
             break;
 
         case IMPORT_CONFIG:
-            console.log(action.payload.value);
-            return state;
-            break;
+            var passed_state = action.payload.value.importedConfig;
+            return {
+                ...state,
+                numRows: parseInt(passed_state.numRows),
+                fileType: passed_state.fileType.toString(),
+                fileName: passed_state.fileName.toString(),
+                colTypeArray: passed_state.colTypeArray,
+                numColsArray: passed_state.numColsArray,
+                colOptsArray: passed_state.colOptsArray,
+                colIdArray: passed_state.colIdArray
+            };
 
         case EXPORT_CONFIG:
 
