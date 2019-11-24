@@ -9,12 +9,30 @@ class GeneratorColumnInput extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      type: "integer",
+      type: this.props.form.colTypeArray[this.props.id],
       num: 0
     }
   }
 
   render() {
+      /* Set Column Numbers from Import Config */
+      var numCols = document.getElementById(`numcols-${this.props.id}`);
+      if (numCols !== null) {
+          for (var i = 0; i < this.props.form.numColsArray.length; i++) {
+              numCols = document.getElementById(`numcols-${i}`);
+              numCols.value = this.props.form.numColsArray[i];
+          }
+      }
+
+      /* Set Column Types from Import Config */
+      var colTypes = document.getElementById(`type-${this.props.id}`);
+      if (numCols !== null) {
+          for (var i = 0; i < this.props.form.numColsArray.length; i++) {
+              colTypes = document.getElementById(`type-${i}`);
+              colTypes.value = this.props.form.colTypeArray[i];
+          }
+      }
+
     return (
       <FormGroup row>
         <Col md={1}>

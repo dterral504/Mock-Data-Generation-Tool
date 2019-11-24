@@ -1,4 +1,4 @@
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME, IMPORT_CONFIG } from "../actions/types.js";
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, IMPORT_CONFIG, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME } from "../actions/types.js";
 
 var zipcodes = require('zipcodes');
 
@@ -51,6 +51,39 @@ function gaussian(mean, stdev) {
     }
 }
 
+/*  Algorithm adapted from: https://stackoverflow.com/a/33567961/466363
+    This function returns a float on a normal distribution.
+    To use: call for each number in the row with mean, stdev, and total samples
+    */
+function gaussianFloat(mean, stdev, sample_size){
+    if(!sample_size) sample_size = 100
+    if(!stdev) stdev = 1
+    if(!mean) mean=0
+
+    var run_total = 0
+    for(var i=0; i<sample_size; i++)
+       run_total += Math.random()
+    return ((stdev*(run_total - sample_size/2)/(sample_size/2))/2)*108 + mean
+}
+
+
+// function onChange(event) {
+//     var reader = new FileReader();
+//     reader.onload = onReaderLoad;
+//     reader.readAsText(event.target.files[0]);
+// }
+//
+// function onReaderLoad(event){
+//     console.log(event.target.result);
+//     var obj = JSON.parse(event.target.result);
+//     console.log(obj);
+//     // alert_data(obj.name, obj.family);
+// }
+
+// function alert_data(name, family){
+//     alert('Name : ' + name + ', Family : ' + family);
+// }
+
 export default function (state = initialState, action) {
     switch (action.type) {
         case ADD_FIELD:
@@ -62,6 +95,19 @@ export default function (state = initialState, action) {
                 colIdArray: [...state.colIdArray, state.colIdArray.length]
             };
             break;
+
+        case IMPORT_CONFIG:
+            var passed_state = action.payload.value.importedConfig;
+            return {
+                ...state,
+                numRows: parseInt(passed_state.numRows),
+                fileType: passed_state.fileType.toString(),
+                fileName: passed_state.fileName.toString(),
+                colTypeArray: passed_state.colTypeArray,
+                numColsArray: passed_state.numColsArray,
+                colOptsArray: passed_state.colOptsArray,
+                colIdArray: passed_state.colIdArray
+            };
 
         case EXPORT_CONFIG:
 
@@ -121,7 +167,6 @@ export default function (state = initialState, action) {
                     dist: "",
                     categoryIdArray: categoryIdArray,
                     categoryNameArray: categoryNameArray,
-                    categoryProbArray, categoryProbArray,
                     hasCorrelation: false
                 }
                 return {
@@ -277,9 +322,9 @@ export default function (state = initialState, action) {
                             } else if (colOpts[i].dist == "normal") {
                                 var mean = colOpts[i].opts.mean;
                                 var stdev = colOpts[i].opts.standard_deviation;
-                                var normal_dist = gaussian(mean, stdev);
+                                console.log("float Uniform");
                                 for (var k = 0; k < rows; k++) {
-                                    arr[k][currentCol] = normal_dist();
+                                    arr[k][currentCol] = gaussianFloat(mean, stdev, rows);
                                 }
                             }
                         } else if (colOpts[i].hasCorrelation == true) {
@@ -294,9 +339,8 @@ export default function (state = initialState, action) {
                             } else if (colOpts[i].dist == "normal") {
                                 var mean = colOpts[i].opts.mean;
                                 var stdev = colOpts[i].opts.standard_deviation;
-                                var normal_dist = gaussian(mean, stdev);
                                 for (var k = 0; k < rows; k++) {
-                                    var val = normal_dist();
+                                    var val = gaussianFloat(mean, stdev, rows);
                                     arr[k][currentCol] = val;
                                     arr[k][currentCol + 1] = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
                                 }

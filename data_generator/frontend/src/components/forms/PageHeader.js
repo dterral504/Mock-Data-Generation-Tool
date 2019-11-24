@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Jumbotron, Button, Container, Row, Col } from "reactstrap";
 import { importConfig } from "../../actions/form"
 
+var importJSON_Obj;
 class PageHeader extends Component {
 
   constructor(props) {
@@ -12,26 +13,27 @@ class PageHeader extends Component {
 
   importConfiguration(event) {
     var reader = new FileReader();
-    var file = event.target.files[0];
 
-    reader.onload = (function (theFile) {
-      return function (event) {
-        this.importJSON_Obj_Global = JSON.parse(event.target.result);
-        console.log(this.importJSON_Obj_Global);
-      };
-    })(file);
+    const scope = this;
+    reader.onload = function load(event) {
+      var contents = JSON.parse(event.target.result);
+      scope.setState({ importedConfig: contents });
+    };
     reader.readAsText(event.target.files[0]);
   }
 
+
   importConfirm = evt => {
     // the "obj" argument to importConfig needs to be whatever you want to pass to the reducer
-    var obj = {}
+    var obj = this.state;
+
     this.props.importConfig(obj);
   }
 
 
   render() {
     return (
+
       <Jumbotron>
         <Container>
           <Row>
@@ -47,16 +49,16 @@ class PageHeader extends Component {
           <br />
           <h6>Customize your data from scratch using the form below, or import a previous configuration by clicking the button below.</h6>
           <br />
-          <Row>
-            <Col md={3}>
-              <input type="file" id="importFile" onChange={this.importConfiguration} />
-            </Col>
-            <Col md={3}>
-              <Button color="warning" onClick={this.importConfirm}>
-                Import Configuration
-              </Button>
-            </Col>
-          </Row>
+           <Row>
+              <Col md={3}>
+                <input type="file" id="importFile" onChange={this.importConfiguration} />
+              </Col>
+              <Col md={3}>
+                <Button color="warning" onClick={this.importConfirm}>
+                  Import Configuration
+                </Button>
+              </Col>
+            </Row>
         </Container>
       </Jumbotron>
     );

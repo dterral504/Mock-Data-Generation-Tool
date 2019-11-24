@@ -5,7 +5,6 @@ import GeneratorColumnInput from "./GeneratorColumnInput";
 
 import { addField, setNumRows, setFileType, setFileName, exportConfig, generateData } from "../../actions/form";
 
-
 class GeneratorForm extends Component {
 
   renderColInputs() {
@@ -21,7 +20,18 @@ class GeneratorForm extends Component {
   }
 
   render() {
-    return (
+    /* Set Num Rows from Import Config */
+    let numRows = document.getElementById(`numrows`);
+    if (numRows !== null) {
+      numRows.value = this.props.form.numRows;
+    }
+    /* Set File Name from Import Config */
+    let fileName = document.getElementById(`filename`);
+    if (fileName !== null) {
+      fileName.value = this.props.form.fileName;
+    }
+
+      return (
       <Form>
         <h5>Column Options</h5>
         <hr />
