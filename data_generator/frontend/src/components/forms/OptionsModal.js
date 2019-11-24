@@ -1,20 +1,9 @@
 import React, { Component } from "react";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Input,
-  ModalFooter,
-  Button,
-  Form,
-  FormGroup,
-  Col,
-  Row,
-  Label
-} from "reactstrap";
+import {Modal, ModalHeader, ModalBody, Input, ModalFooter, Button, Form, FormGroup, Col, Row, Label} from "reactstrap";
 import { connect } from 'react-redux';
 import { setOptsInt } from "../../actions/form";
 import CategoricalInput from "./CategoricalInput"
+
 
 class OptionsModal extends Component {
   constructor(props) {
@@ -29,6 +18,12 @@ class OptionsModal extends Component {
 
 
 
+  addOptionsFromImport() {
+    console.log(this.props.form);
+    /* Finish the import function */
+  }
+
+
   handleDistributionChange = e => {
     // var dist = e.target.value;
     this.setState({ dist: e.target.value });
@@ -37,30 +32,31 @@ class OptionsModal extends Component {
   handleModalSubmit = evt => {
     var type = this.props.form.colTypeArray[this.props.id];
     var dist = this.state.dist;
-    if (type == "integer") {
-      if (dist == "uniform") {
+
+    if (type === "integer") {
+      if (dist === "uniform") {
         var opts = {
           min: parseInt(document.getElementById(`min-${this.props.id}`).value),
           max: parseInt(document.getElementById(`max-${this.props.id}`).value)
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
-      if (dist == "normal") {
+      if (dist === "normal") {
         var opts = {
           mean: parseInt(document.getElementById(`mean-${this.props.id}`).value),
           standard_deviation: parseInt(document.getElementById(`standard-deviation-${this.props.id}`).value)
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
-    } else if (type == "float") {
-      if (dist == "uniform") {
+    } else if (type === "float") {
+      if (dist === "uniform") {
         var opts = {
           min: document.getElementById(`min-${this.props.id}`).value,
           max: document.getElementById(`max-${this.props.id}`).value
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
-      if (dist == "normal") {
+      if (dist === "normal") {
         var opts = {
           mean: parseInt(document.getElementById(`mean-${this.props.id}`).value),
           standard_deviation: parseInt(document.getElementById(`standard-deviation-${this.props.id}`).value)
@@ -68,18 +64,18 @@ class OptionsModal extends Component {
         this.props.setOptsInt(dist, opts, this.props.id);
       }
     }
-    else if (type == "zip-code") {
-      if (dist == "uniform-usa") {
+    else if (type === "zip-code") {
+      if (dist === "uniform-usa") {
         var opts = {};
         this.props.setOptsInt(dist, opts, this.props.id);
       }
-      else if (dist == "uniform-state") {
+      else if (dist === "uniform-state") {
         var opts = {
           state: document.getElementById(`state-${this.props.id}`).value
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
-      else if (dist == "uniform-city") {
+      else if (dist === "uniform-city") {
         var opts = {
           state: document.getElementById(`state-${this.props.id}`).value,
           city: document.getElementById(`city-${this.props.id}`).value
@@ -87,12 +83,12 @@ class OptionsModal extends Component {
         this.props.setOptsInt(dist, opts, this.props.id);
       }
     }
-    else if (type == "phone") {
-      if (dist == "all-area-codes") {
+    else if (type === "phone") {
+      if (dist === "all-area-codes") {
         var opts = {};
         this.props.setOptsInt(dist, opts, this.props.id);
       }
-      else if (dist == "area-codes") {
+      else if (dist === "area-codes") {
         var areaCodes = document.getElementById(`area-codes-${this.props.id}`).value
         var opts = {
           areaCodes: areaCodes
@@ -100,19 +96,24 @@ class OptionsModal extends Component {
         this.props.setOptsInt(dist, opts, this.props.id);
       }
     }
-    else if (type == "categorical") {
+    else if (type === "categorical") {
     }
     this.toggleModal()
   };
 
   toggleModal() {
+    console.log("toggleModal");
     this.setState(prevState => ({
       isOpen: !prevState.isOpen
     }));
   }
 
   render() {
-    if (this.props.type == "integer") {
+    /* Add Options from Import */
+    this.addOptionsFromImport();
+
+
+    if (this.props.type === "integer") {
       var modal_html = (
         <div>
           <Button color="secondary" onClick={this.toggleModal}>
@@ -122,7 +123,6 @@ class OptionsModal extends Component {
           <Modal
             isOpen={this.state.isOpen}
             toggle={this.toggleModal}
-            //   className={this.props.className}
             unmountOnClose={false}
           >
             <ModalHeader toggle={this.toggleModal}>Integer Options</ModalHeader>
@@ -201,7 +201,7 @@ class OptionsModal extends Component {
       )
       return modal_html;
     }
-    else if (this.props.type == "float") {
+    else if (this.props.type === "float") {
       var modal_html = (
         <div>
           <Button color="secondary" onClick={this.toggleModal}>
@@ -211,7 +211,6 @@ class OptionsModal extends Component {
           <Modal
             isOpen={this.state.isOpen}
             toggle={this.toggleModal}
-            //   className={this.props.className}
             unmountOnClose={false}
           >
             <ModalHeader toggle={this.toggleModal}>Float Options</ModalHeader>
@@ -226,9 +225,11 @@ class OptionsModal extends Component {
                     onChange={this.handleDistributionChange}
                   >
                     <option value="">--Select a Distribution--</option>
-                    <option value="uniform">Uniform</option>
+                    <option value="uniform" >Uniform</option>
                     <option value="normal">Gaussian (Normal)</option>
                   </Input>
+                  {console.log("render")}
+
                 </FormGroup>
                 <hr />
                 <h5>Uniform</h5>
@@ -290,7 +291,7 @@ class OptionsModal extends Component {
       )
       return modal_html;
     }
-    else if (this.props.type == "zip-code") {
+    else if (this.props.type === "zip-code") {
       var modal_html = (
         <div>
           <Button color="secondary" onClick={this.toggleModal}>
@@ -300,7 +301,6 @@ class OptionsModal extends Component {
           <Modal
             isOpen={this.state.isOpen}
             toggle={this.toggleModal}
-            //   className={this.props.className}
             unmountOnClose={false}
           >
             <ModalHeader toggle={this.toggleModal}>Zip Code Options</ModalHeader>
@@ -330,7 +330,7 @@ class OptionsModal extends Component {
                       name="state"
                       id={`state-${this.props.id}`}
                       // onChange={e => this.setState({ option2: e.target.value })}
-                      disabled={(this.state.dist != "uniform-city") && (this.state.dist != "uniform-state")}
+                      disabled={(this.state.dist !== "uniform-city") && (this.state.dist !== "uniform-state")}
                     />
                   </Col>
                   <Col md={6}>
@@ -340,7 +340,7 @@ class OptionsModal extends Component {
                       name="city"
                       id={`city-${this.props.id}`}
                       // onChange={e => this.setState({ option3: e.target.value })}
-                      disabled={this.state.dist != "uniform-city"}
+                      disabled={this.state.dist !== "uniform-city"}
                     />
                   </Col>
                 </FormGroup>
@@ -355,7 +355,8 @@ class OptionsModal extends Component {
         </div>
       )
       return modal_html;
-    } else if (this.props.type == "phone") {
+    }
+    else if (this.props.type === "phone") {
       var modal_html = (
         <div>
           <Button color="secondary" onClick={this.toggleModal}>
@@ -394,7 +395,7 @@ class OptionsModal extends Component {
                       name="state"
                       id={`area-codes-${this.props.id}`}
                       // onChange={e => this.setState({ option2: e.target.value })}
-                      disabled={this.state.dist != "area-codes"}
+                      disabled={this.state.dist !== "area-codes"}
                     />
                   </Col>
                 </FormGroup>
@@ -409,7 +410,8 @@ class OptionsModal extends Component {
         </div>
       )
       return modal_html;
-    } else if (this.props.type == "categorical") {
+    }
+    else if (this.props.type === "categorical") {
       var modal_html = (
         <div>
           <Button color="secondary" onClick={this.toggleModal}>
@@ -433,7 +435,8 @@ class OptionsModal extends Component {
         </div>
       )
       return modal_html;
-    } else {
+    }
+    else {
       return (
         <div>
           <Button color="secondary" onClick={this.toggleModal}>

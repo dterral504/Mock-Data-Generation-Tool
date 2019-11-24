@@ -8,8 +8,6 @@ import { addField, setNumRows, setFileType, setFileName, exportConfig, generateD
 class GeneratorForm extends Component {
 
   renderColInputs() {
-    // console.log(this.props.form.colIdArray);
-    // console.log(this.props.form);
     return this.props.form.colIdArray.map(id => {
       return (
         <GeneratorColumnInput
@@ -22,13 +20,16 @@ class GeneratorForm extends Component {
   }
 
   render() {
-    // console.log(this.props.id);
-    // console.log(this.props.form);
-    // this.state.type = this.props.form.colTypeArray[this.props.id];
-
-    // console.log(this.state);
-    // this.setState(this.state);
-    // this.state = this.props.form;
+    /* Set Num Rows from Import Config */
+    let numRows = document.getElementById(`numrows`);
+    if (numRows !== null) {
+      numRows.value = this.props.form.numRows;
+    }
+    /* Set File Name from Import Config */
+    let fileName = document.getElementById(`filename`);
+    if (fileName !== null) {
+      fileName.value = this.props.form.fileName;
+    }
 
       return (
       <Form>

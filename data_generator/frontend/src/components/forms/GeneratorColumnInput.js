@@ -8,7 +8,6 @@ import { setNumCols, setDataType } from "../../actions/form";
 class GeneratorColumnInput extends Component {
   constructor(props) {
     super(props);
-      console.log(this.props.form.colTypeArray[this.props.id]);
     this.state = {
       type: this.props.form.colTypeArray[this.props.id],
       num: 0
@@ -16,12 +15,7 @@ class GeneratorColumnInput extends Component {
   }
 
   render() {
-      // console.log(this.props.id);
-      // console.log(this.props.form);
-      // this.state.type = this.props.form.colTypeArray[this.props.id];
-      //
-      // console.log(this.state);
-      // this.setState(this.state);
+      /* Set Column Numbers from Import Config */
       var numCols = document.getElementById(`numcols-${this.props.id}`);
       if (numCols !== null) {
           for (var i = 0; i < this.props.form.numColsArray.length; i++) {
@@ -30,6 +24,7 @@ class GeneratorColumnInput extends Component {
           }
       }
 
+      /* Set Column Types from Import Config */
       var colTypes = document.getElementById(`type-${this.props.id}`);
       if (numCols !== null) {
           for (var i = 0; i < this.props.form.numColsArray.length; i++) {
