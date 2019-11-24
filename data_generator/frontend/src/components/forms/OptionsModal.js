@@ -18,14 +18,10 @@ class OptionsModal extends Component {
 
 
 
-  addOptionsFromImport() {
-    console.log(this.props.form);
-    /* Finish the import function */
-  }
-
+  addOptionsFromImport() {}
 
   handleDistributionChange = e => {
-    // var dist = e.target.value;
+    this.props.form.colOptsArray[this.props.id].dist = e.target.value;
     this.setState({ dist: e.target.value });
   };
 
@@ -89,7 +85,7 @@ class OptionsModal extends Component {
         this.props.setOptsInt(dist, opts, this.props.id);
       }
       else if (dist === "area-codes") {
-        var areaCodes = document.getElementById(`area-codes-${this.props.id}`).value
+        var areaCodes = document.getElementById(`area-codes-${this.props.id}`).value;
         var opts = {
           areaCodes: areaCodes
         };
@@ -102,15 +98,80 @@ class OptionsModal extends Component {
   };
 
   toggleModal() {
-    console.log("toggleModal");
     this.setState(prevState => ({
       isOpen: !prevState.isOpen
     }));
   }
 
   render() {
-    /* Add Options from Import */
-    this.addOptionsFromImport();
+    /* Add Distribution Options from Import */
+    let dist;
+    let min, max, mean, stdev;
+    let state, city;
+    let areaCode;
+
+    console.log(this.props.form);
+
+    let import_options = this.props.form.colOptsArray[this.props.id];
+    if (typeof import_options !== 'undefined') {
+
+      /* Distributions */
+      if (import_options.dist !== 'undefined') {
+        dist = import_options.dist;
+        this.state.dist = dist;
+        console.log(this.state.dist);
+      }
+
+      /* Specific Options */
+      if (import_options.opts !== 'undefined') {
+        /* Set Uniform: Min, Max */
+        let type = this.props.form.colTypeArray[this.props.id];
+        if (import_options.dist === "uniform") {
+          if (type === "float" || type === "integer") {
+            min = import_options.opts.min;
+            max = import_options.opts.max;
+          }
+        }
+
+        /* Set Gaussian: Mean, Standard Deviation */
+        if (import_options.dist === "normal") {
+          if (type === "float" || type === "integer") {
+            mean = import_options.opts.mean;
+            stdev = import_options.opts.standard_deviation;
+          }
+        }
+
+
+        /* Set Zip Codes: USA, State, City */
+        if (import_options.dist === "uniform-state") {
+          state = import_options.opts.state;
+        }
+        else if (import_options.dist === "uniform-city") {
+          state = import_options.opts.state;
+          city = import_options.opts.city;
+        }
+
+
+        /* Set Area Code */
+        if (import_options.dist === "area-codes") {
+          areaCode = import_options.opts.area-codes;
+        }
+
+
+        /* Set Categorical */
+        // if (import_options.dist === "uniform") {
+        //   if (type === "categorical") {
+        //
+        //   }
+        // }
+
+
+
+
+
+
+      }
+    }
 
 
     if (this.props.type === "integer") {
@@ -135,6 +196,7 @@ class OptionsModal extends Component {
                     name="distribution"
                     id={`dist-${this.props.id}`}
                     onChange={this.handleDistributionChange}
+                    defaultValue={dist}
                   >
                     <option value="">--Select a Distribution--</option>
                     <option value="uniform">Uniform</option>
@@ -150,8 +212,8 @@ class OptionsModal extends Component {
                       type="number"
                       name="min"
                       id={`min-${this.props.id}`}
-                      // onChange={e => this.setState({ option2: e.target.value })}
                       disabled={this.state.dist !== "uniform"}
+                      placeholder={min}
                     />
                   </Col>
                   <Col md={6}>
@@ -160,8 +222,8 @@ class OptionsModal extends Component {
                       type="number"
                       name="max"
                       id={`max-${this.props.id}`}
-                      // onChange={e => this.setState({ option3: e.target.value })}
                       disabled={this.state.dist !== "uniform"}
+                      placeholder={max}
                     />
                   </Col>
                 </FormGroup>
@@ -174,8 +236,8 @@ class OptionsModal extends Component {
                       type="number"
                       name="mean"
                       id={`mean-${this.props.id}`}
-                      // onChange={e => this.setState({ option2: e.target.value })}
                       disabled={this.state.dist !== "normal"}
+                      placeholder={mean}
                     />
                   </Col>
                   <Col md={6}>
@@ -184,8 +246,8 @@ class OptionsModal extends Component {
                       type="number"
                       name="standard-deviation"
                       id={`standard-deviation-${this.props.id}`}
-                      // onChange={e => this.setState({ option3: e.target.value })}
                       disabled={this.state.dist !== "normal"}
+                      placeholder={stdev}
                     />
                   </Col>
                 </FormGroup>
@@ -222,13 +284,13 @@ class OptionsModal extends Component {
                     type="select"
                     name="distribution"
                     id={`dist-${this.props.id}`}
+                    defaultValue={dist}
                     onChange={this.handleDistributionChange}
                   >
                     <option value="">--Select a Distribution--</option>
                     <option value="uniform" >Uniform</option>
                     <option value="normal">Gaussian (Normal)</option>
                   </Input>
-                  {console.log("render")}
 
                 </FormGroup>
                 <hr />
@@ -240,8 +302,8 @@ class OptionsModal extends Component {
                       type="number"
                       name="min"
                       id={`min-${this.props.id}`}
-                      // onChange={e => this.setState({ option2: e.target.value })}
                       disabled={this.state.dist !== "uniform"}
+                      placeholder={min}
                     />
                   </Col>
                   <Col md={6}>
@@ -250,8 +312,8 @@ class OptionsModal extends Component {
                       type="number"
                       name="max"
                       id={`max-${this.props.id}`}
-                      // onChange={e => this.setState({ option3: e.target.value })}
                       disabled={this.state.dist !== "uniform"}
+                      placeholder={max}
                     />
                   </Col>
                 </FormGroup>
@@ -264,8 +326,8 @@ class OptionsModal extends Component {
                       type="number"
                       name="mean"
                       id={`mean-${this.props.id}`}
-                      // onChange={e => this.setState({ option2: e.target.value })}
                       disabled={this.state.dist !== "normal"}
+                      placeholder={mean}
                     />
                   </Col>
                   <Col md={6}>
@@ -274,8 +336,8 @@ class OptionsModal extends Component {
                       type="number"
                       name="standard-deviation"
                       id={`standard-deviation-${this.props.id}`}
-                      // onChange={e => this.setState({ option3: e.target.value })}
                       disabled={this.state.dist !== "normal"}
+                      placeholder={stdev}
                     />
                   </Col>
                 </FormGroup>
@@ -313,6 +375,7 @@ class OptionsModal extends Component {
                     name="distribution"
                     id={`dist-${this.props.id}`}
                     onChange={this.handleDistributionChange}
+                    defaultValue={dist}
                   >
                     <option value="">--Select a Distribution--</option>
                     <option value="uniform-usa">Uniform (USA)</option>
@@ -329,8 +392,8 @@ class OptionsModal extends Component {
                       type="text"
                       name="state"
                       id={`state-${this.props.id}`}
-                      // onChange={e => this.setState({ option2: e.target.value })}
                       disabled={(this.state.dist !== "uniform-city") && (this.state.dist !== "uniform-state")}
+                      placeholder={state}
                     />
                   </Col>
                   <Col md={6}>
@@ -339,8 +402,8 @@ class OptionsModal extends Component {
                       type="text"
                       name="city"
                       id={`city-${this.props.id}`}
-                      // onChange={e => this.setState({ option3: e.target.value })}
                       disabled={this.state.dist !== "uniform-city"}
+                      placeholder={city}
                     />
                   </Col>
                 </FormGroup>
@@ -366,7 +429,6 @@ class OptionsModal extends Component {
           <Modal
             isOpen={this.state.isOpen}
             toggle={this.toggleModal}
-            //   className={this.props.className}
             unmountOnClose={false}
           >
             <ModalHeader toggle={this.toggleModal}>Phone Number Options</ModalHeader>
@@ -379,6 +441,7 @@ class OptionsModal extends Component {
                     name="distribution"
                     id={`dist-${this.props.id}`}
                     onChange={this.handleDistributionChange}
+                    defaultValue={dist}
                   >
                     <option value="">--Select a Distribution--</option>
                     <option value="all-area-codes">None</option>
@@ -394,8 +457,8 @@ class OptionsModal extends Component {
                       type="text"
                       name="state"
                       id={`area-codes-${this.props.id}`}
-                      // onChange={e => this.setState({ option2: e.target.value })}
                       disabled={this.state.dist !== "area-codes"}
+                      placeholder={areaCode}
                     />
                   </Col>
                 </FormGroup>
@@ -421,7 +484,6 @@ class OptionsModal extends Component {
           <Modal
             isOpen={this.state.isOpen}
             toggle={this.toggleModal}
-            //   className={this.props.className}
             unmountOnClose={false}
           >
             <ModalHeader toggle={this.toggleModal}>Categorical Options</ModalHeader>
@@ -445,7 +507,6 @@ class OptionsModal extends Component {
           <Modal
             isOpen={this.state.isOpen}
             toggle={this.toggleModal}
-            //   className={this.props.className}
             unmountOnClose={false}
           >
             <ModalHeader toggle={this.toggleModal}>Options</ModalHeader>
