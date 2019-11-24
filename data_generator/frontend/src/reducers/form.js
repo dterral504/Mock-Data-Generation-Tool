@@ -16,13 +16,13 @@ const initialState = {
 
 function correlation(x1, slope, intercept, stddev) {
     var y = slope * x1
-    var normal_dist = gaussian(intercept, stddev);
+    var normal_dist = gaussianInt(intercept, stddev);
     var err = normal_dist();
     return y + err;
 }
 
 
-function gaussian(mean, stdev) {
+function gaussianInt(mean, stdev) {
     var y2;
     var use_last = false;
     return function () {
@@ -35,8 +35,11 @@ function gaussian(mean, stdev) {
             var x1, x2, w;
             do {
                 x1 = 2.0 * Math.random() - 1.0;
+                // console.log("x1: " + x1);
                 x2 = 2.0 * Math.random() - 1.0;
+                // console.log("x2: " + x2);
                 w = x1 * x1 + x2 * x2;
+                // console.log("w: " + w)
             } while (w >= 1.0);
             w = Math.sqrt((-2.0 * Math.log(w)) / w);
             y1 = x1 * w;
@@ -45,11 +48,14 @@ function gaussian(mean, stdev) {
         }
 
         var retval = mean + stdev * y1;
-        if (retval > 0)
-            return retval;
-        return -retval;
+        return retval;
+
+        // if (retval > 0)
+        //     return retval;
+        // return -retval;
     }
 }
+
 
 /*  Algorithm adapted from: https://stackoverflow.com/a/33567961/466363
     This function returns a float on a normal distribution.
@@ -63,26 +69,12 @@ function gaussianFloat(mean, stdev, sample_size){
     var run_total = 0
     for(var i=0; i<sample_size; i++)
        run_total += Math.random()
-    return ((stdev*(run_total - sample_size/2)/(sample_size/2))/2)*108 + mean
+    let result = ((stdev*(run_total - sample_size/2)/(sample_size/2))/2)*108 + mean
+    console.log(result);
+    console.log(Math.round(result));
+    return result;
+
 }
-
-
-// function onChange(event) {
-//     var reader = new FileReader();
-//     reader.onload = onReaderLoad;
-//     reader.readAsText(event.target.files[0]);
-// }
-//
-// function onReaderLoad(event){
-//     console.log(event.target.result);
-//     var obj = JSON.parse(event.target.result);
-//     console.log(obj);
-//     // alert_data(obj.name, obj.family);
-// }
-
-// function alert_data(name, family){
-//     alert('Name : ' + name + ', Family : ' + family);
-// }
 
 export default function (state = initialState, action) {
     switch (action.type) {
@@ -110,7 +102,6 @@ export default function (state = initialState, action) {
             };
 
         case EXPORT_CONFIG:
-
             let contentType = "application/json;charset=utf-8;";
             var a = document.createElement('a');
             a.download = state.fileName + "_config.json";
@@ -120,24 +111,25 @@ export default function (state = initialState, action) {
             a.click();
             document.body.removeChild(a);
             return state;
-        case IMPORT_CONFIG:
-            // you can access the JSON object here using action.payload.value
-            console.log("inside of import config");
+
         case SET_NUM_ROWS:
             return {
                 ...state,
                 numRows: parseInt(action.payload.value)
             };
+
         case SET_FILE_TYPE:
             return {
                 ...state,
                 fileType: action.payload.value
             };
+
         case SET_FILE_NAME:
             return {
                 ...state,
                 fileName: action.payload.value
             }
+
         case SET_NUM_COLS:
             var newArr = state.numColsArray.splice(0)
             var newVal = parseInt(action.payload.value)
@@ -159,7 +151,7 @@ export default function (state = initialState, action) {
             var newTypeArr = state.colTypeArray.splice(0)
             newTypeArr[action.payload.id] = action.payload.value
             var newOptsArr = state.colOptsArray.splice(0)
-            if (action.payload.value == "categorical") {
+            if (action.payload.value === "categorical") {
                 var categoryIdArray = [0, 1]
                 var categoryNameArray = ["", ""]
                 var categoryProbArray = [0, 0]
@@ -198,6 +190,7 @@ export default function (state = initialState, action) {
                 ...state,
                 colOptsArray: newArr
             };
+
         case SET_CAT_NAME:
             var newArr = action.payload.colOptsArray.splice(0)
             var currOpts = newArr[action.payload.id]
@@ -213,6 +206,7 @@ export default function (state = initialState, action) {
                 ...state,
                 colOptsArray: newArr
             };
+
         case SET_CAT_PROB:
             var newArr = action.payload.colOptsArray.splice(0)
             var currOpts = newArr[action.payload.id]
@@ -245,7 +239,6 @@ export default function (state = initialState, action) {
             };
 
         case GENERATE_DATA:
-
             var arr = [];
             var cols = state.numColsArray;
             var rows = state.numRows;
@@ -256,7 +249,7 @@ export default function (state = initialState, action) {
             var totalCols = 0;
             for (var i = 0; i < cols.length; i++) {
                 totalCols += cols[i];
-                if (colOpts[i].hasCorrelation == true) {
+                if (colOpts[i].hasCorrelation === true) {
                     totalCols++;
                 }
             }
@@ -271,24 +264,24 @@ export default function (state = initialState, action) {
             var currentCol = 0;
             for (var i = 0; i < types.length; i++) {
                 for (var j = 0; j < cols[i]; j++) {
-                    if (types[i] == "integer") {
-                        if (colOpts[i].hasCorrelation == false) {
-                            if (colOpts[i].dist == "uniform") {
+                    if (types[i] === "integer") {
+                        if (colOpts[i].hasCorrelation === false) {
+                            if (colOpts[i].dist === "uniform") {
                                 var min = Math.ceil(colOpts[i].opts.min);
                                 var max = Math.floor(colOpts[i].opts.max);
                                 for (var k = 0; k < rows; k++) {
                                     arr[k][currentCol] = Math.floor(Math.random() * (max - min + 1)) + min;
                                 }
-                            } else if (colOpts[i].dist == "normal") {
-                                var mean = colOpts[i].opts.mean;
-                                var stdev = colOpts[i].opts.standard_deviation;
-                                var normal_dist = gaussian(mean, stdev);
-                                for (var k = 0; k < rows; k++) {
-                                    arr[k][currentCol] = Math.floor(normal_dist());
+                            } else if (colOpts[i].dist === "normal") {
+                                let mean = colOpts[i].opts.mean;
+                                let stdev = colOpts[i].opts.standard_deviation;
+                                var normal_dist = gaussianInt(mean, stdev);
+                                for (let k = 0; k < rows; k++) {
+                                    arr[k][currentCol] = Math.round(normal_dist());
                                 }
                             }
-                        } else if (colOpts[i].hasCorrelation == true) {
-                            if (colOpts[i].dist == "uniform") {
+                        } else if (colOpts[i].hasCorrelation === true) {
+                            if (colOpts[i].dist === "uniform") {
                                 var min = Math.ceil(colOpts[i].opts.min);
                                 var max = Math.floor(colOpts[i].opts.max);
                                 for (var k = 0; k < rows; k++) {
@@ -297,10 +290,10 @@ export default function (state = initialState, action) {
                                     arr[k][currentCol] = Math.floor(val);
                                     arr[k][currentCol + 1] = Math.floor(correlatedVal);
                                 }
-                            } else if (colOpts[i].dist == "normal") {
+                            } else if (colOpts[i].dist === "normal") {
                                 var mean = colOpts[i].opts.mean;
                                 var stdev = colOpts[i].opts.standard_deviation;
-                                var normal_dist = gaussian(mean, stdev);
+                                var normal_dist = gaussianInt(mean, stdev);
                                 for (var k = 0; k < rows; k++) {
                                     var val = normal_dist();
                                     var correlatedVal = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
@@ -311,24 +304,24 @@ export default function (state = initialState, action) {
                             currentCol++;
                         }
 
-                    } else if (types[i] == "float") {
-                        if (colOpts[i].hasCorrelation == false) {
-                            if (colOpts[i].dist == "uniform") {
+                    } else if (types[i] === "float") {
+                        if (colOpts[i].hasCorrelation === false) {
+                            if (colOpts[i].dist === "uniform") {
                                 var min = colOpts[i].opts.min;
                                 var max = colOpts[i].opts.max;
                                 for (var k = 0; k < rows; k++) {
                                     arr[k][currentCol] = Math.random() * (max - min + 1) + min;
                                 }
-                            } else if (colOpts[i].dist == "normal") {
+                            } else if (colOpts[i].dist === "normal") {
                                 var mean = colOpts[i].opts.mean;
                                 var stdev = colOpts[i].opts.standard_deviation;
-                                console.log("float Uniform");
+                                // console.log("float Uniform");
                                 for (var k = 0; k < rows; k++) {
                                     arr[k][currentCol] = gaussianFloat(mean, stdev, rows);
                                 }
                             }
-                        } else if (colOpts[i].hasCorrelation == true) {
-                            if (colOpts[i].dist == "uniform") {
+                        } else if (colOpts[i].hasCorrelation === true) {
+                            if (colOpts[i].dist === "uniform") {
                                 var min = colOpts[i].opts.min;
                                 var max = colOpts[i].opts.max;
                                 for (var k = 0; k < rows; k++) {
@@ -336,7 +329,7 @@ export default function (state = initialState, action) {
                                     arr[k][currentCol] = val;
                                     arr[k][currentCol + 1] = correlation(val, colOpts[i].correlationOpts.slope, colOpts[i].correlationOpts.intercept, colOpts[i].correlationOpts.stddev);
                                 }
-                            } else if (colOpts[i].dist == "normal") {
+                            } else if (colOpts[i].dist === "normal") {
                                 var mean = colOpts[i].opts.mean;
                                 var stdev = colOpts[i].opts.standard_deviation;
                                 for (var k = 0; k < rows; k++) {
@@ -348,23 +341,23 @@ export default function (state = initialState, action) {
                             currentCol++;
                         }
                     }
-                    else if (types[i] == "zip-code") {
+                    else if (types[i] === "zip-code") {
                         for (var k = 0; k < rows; k++) {
-                            if (colOpts[i].dist == "uniform-usa") {
+                            if (colOpts[i].dist === "uniform-usa") {
                                 arr[k][currentCol] = zipcodes.random().zip;
                             }
-                            else if (colOpts[i].dist == "uniform-state") {
+                            else if (colOpts[i].dist === "uniform-state") {
                                 var stateZipCodes = zipcodes.lookupByState(colOpts[i].opts.state);
                                 arr[k][currentCol] = stateZipCodes[Math.floor(Math.random() * stateZipCodes.length)].zip;
                             }
-                            else if (colOpts[i].dist == "uniform-city") {
+                            else if (colOpts[i].dist === "uniform-city") {
                                 var cityZipCodes = zipcodes.lookupByName(colOpts[i].opts.city, colOpts[i].opts.state);
                                 arr[k][currentCol] = cityZipCodes[Math.floor(Math.random() * (cityZipCodes.length - 1))].zip;
                             }
                         }
                     }
-                    else if (types[i] == "phone") {
-                        if (colOpts[i].dist == "all-area-codes") {
+                    else if (types[i] === "phone") {
+                        if (colOpts[i].dist === "all-area-codes") {
                             for (var k = 0; k < rows; k++) {
                                 var first = Math.floor(Math.random() * 1000);
                                 while (first < 100) { first = Math.floor(Math.random() * 1000) }
@@ -378,7 +371,7 @@ export default function (state = initialState, action) {
                                 arr[k][currentCol] = first + "-" + middle + "-" + last;
                             }
                         }
-                        if (colOpts[i].dist == "area-codes") {
+                        if (colOpts[i].dist === "area-codes") {
                             for (var k = 0; k < rows; k++) {
                                 var middle = Math.floor(Math.random() * 1000);
                                 if (middle < 10) middle = "00" + middle.toString();
@@ -391,14 +384,14 @@ export default function (state = initialState, action) {
                             }
                         }
                     }
-                    else if (types[i] == "categorical") {
-                        if (colOpts[i].dist == "uniform") {
+                    else if (types[i] === "categorical") {
+                        if (colOpts[i].dist === "uniform") {
                             for (var k = 0; k < rows; k++) {
                                 var rand = Math.floor(Math.random() * colOpts[i].categoryIdArray.length)
                                 arr[k][currentCol] = colOpts[i].categoryNameArray[rand]
                             }
                         }
-                        if (colOpts[i].dist == "multinomial") {
+                        if (colOpts[i].dist === "multinomial") {
                             var nameArr = colOpts[i].categoryNameArray
                             var probArr = colOpts[i].categoryProbArray
                             var catList = []
@@ -416,15 +409,15 @@ export default function (state = initialState, action) {
                             }
                         }
                     }
-                    else if (types[i] == "date-time") {
-                        if (colOpts[i].dist == "date") {
+                    else if (types[i] === "date-time") {
+                        if (colOpts[i].dist === "date") {
                             var start = new Date(colOpts[i].opts.startDate);
                             var end = new Date(colOpts[i].opts.endDate);
                             for (var k = 0; k < rows; k++) {
                                 arr[k][currentCol] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
                             }
                         }
-                        if (colOpts[i].dist == "timestamp") {
+                        if (colOpts[i].dist === "timestamp") {
                             var start = new Date(colOpts[i].opts.startDate + " " + colOpts[i].opts.startTime);
                             var end = new Date(colOpts[i].opts.endDate + " " + colOpts[i].opts.endTime);
                             for (var k = 0; k < rows; k++) {

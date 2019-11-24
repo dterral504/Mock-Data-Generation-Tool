@@ -13,7 +13,6 @@ class PageHeader extends Component {
 
   importConfiguration(event) {
     var reader = new FileReader();
-
     const scope = this;
     reader.onload = function load(event) {
       var contents = JSON.parse(event.target.result);
@@ -26,7 +25,6 @@ class PageHeader extends Component {
   importConfirm = evt => {
     // the "obj" argument to importConfig needs to be whatever you want to pass to the reducer
     var obj = this.state;
-
     this.props.importConfig(obj);
   }
 
