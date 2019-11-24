@@ -13,6 +13,7 @@ class PageHeader extends Component {
 
   importConfiguration(event) {
     var reader = new FileReader();
+
     const scope = this;
     reader.onload = function load(event) {
       var contents = JSON.parse(event.target.result);
@@ -25,28 +26,30 @@ class PageHeader extends Component {
   importConfirm = evt => {
     // the "obj" argument to importConfig needs to be whatever you want to pass to the reducer
     var obj = this.state;
+
     this.props.importConfig(obj);
   }
 
 
   render() {
     return (
-        <Jumbotron>
-          <Container>
-            <Row>
-              <Col>
-                <h1 className="display-3">Data Generation Tool</h1>
-              </Col>
-              <Col md={1}>
-                <a href="https://github.com/dterral504/Mock-Data-Generation-Tool"><img src="../../../static/images/github_logo.png" alt="Our GitHub Repo" /></a>
-              </Col>
-            </Row>
 
-            <hr className="my-2" />
-            <br />
-            <h6>Customize your data from scratch using the form below, or import a previous configuration by clicking the button below.</h6>
-            <br />
-            <Row>
+      <Jumbotron>
+        <Container>
+          <Row>
+            <Col>
+              <h1 className="display-3">Data Generation Tool</h1>
+            </Col>
+            <Col md={1}>
+              <a href="https://github.com/dterral504/Mock-Data-Generation-Tool"><img src="../../../static/images/github_logo.png" alt="Our GitHub Repo" /></a>
+            </Col>
+          </Row>
+
+          <hr className="my-2" />
+          <br />
+          <h6>Customize your data from scratch using the form below, or import a previous configuration by clicking the button below.</h6>
+          <br />
+           <Row>
               <Col md={3}>
                 <input type="file" id="importFile" onChange={this.importConfiguration} />
               </Col>
@@ -56,8 +59,8 @@ class PageHeader extends Component {
                 </Button>
               </Col>
             </Row>
-          </Container>
-        </Jumbotron>
+        </Container>
+      </Jumbotron>
     );
   }
 }

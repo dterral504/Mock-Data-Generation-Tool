@@ -120,8 +120,9 @@ export default function (state = initialState, action) {
             a.click();
             document.body.removeChild(a);
             return state;
-            break;
-
+        case IMPORT_CONFIG:
+            // you can access the JSON object here using action.payload.value
+            console.log("inside of import config");
         case SET_NUM_ROWS:
             return {
                 ...state,
@@ -412,6 +413,22 @@ export default function (state = initialState, action) {
                             for (var k = 0; k < rows; k++) {
                                 var rand = Math.floor(Math.random() * total)
                                 arr[k][currentCol] = catList[rand]
+                            }
+                        }
+                    }
+                    else if (types[i] == "date-time") {
+                        if (colOpts[i].dist == "date") {
+                            var start = new Date(colOpts[i].opts.startDate);
+                            var end = new Date(colOpts[i].opts.endDate);
+                            for (var k = 0; k < rows; k++) {
+                                arr[k][currentCol] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+                            }
+                        }
+                        if (colOpts[i].dist == "timestamp") {
+                            var start = new Date(colOpts[i].opts.startDate + " " + colOpts[i].opts.startTime);
+                            var end = new Date(colOpts[i].opts.endDate + " " + colOpts[i].opts.endTime);
+                            for (var k = 0; k < rows; k++) {
+                                arr[k][currentCol] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
                             }
                         }
                     }

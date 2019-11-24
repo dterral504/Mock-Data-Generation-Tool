@@ -36,6 +36,9 @@ class GeneratorForm extends Component {
         <h5>Column Options</h5>
         <hr />
         <Row>
+          <Col md={1}>
+            <Label>Remove</Label>
+          </Col>
           <Col md={3}>
             <Label>Column Data Type</Label>
           </Col>
@@ -93,9 +96,9 @@ class GeneratorForm extends Component {
         </FormGroup>
         <hr />
         <FormGroup row>
-          <Col md={2}>
+          <Col md={3}>
             <Button color="secondary" onClick={this.props.exportConfig}>
-              Export Config
+              Export Configuration
             </Button>
           </Col>
           <Col>

@@ -3,6 +3,7 @@ import {Modal, ModalHeader, ModalBody, Input, ModalFooter, Button, Form, FormGro
 import { connect } from 'react-redux';
 import { setOptsInt } from "../../actions/form";
 import CategoricalInput from "./CategoricalInput"
+import DateInput from "./DateInput";
 
 
 class OptionsModal extends Component {
@@ -92,7 +93,27 @@ class OptionsModal extends Component {
         this.props.setOptsInt(dist, opts, this.props.id);
       }
     }
-    else if (type === "categorical") {
+
+    else if (type == "categorical") {
+      // categorical input taken care of in CategoricalInput component
+    }
+    else if (type == "date-time") {
+      if (dist == "date") {
+        var opts = {
+          startDate: document.getElementById(`start-date-${this.props.id}`).value,
+            endDate: document.getElementById(`end-date-${this.props.id}`).value
+        };
+        this.props.setOptsInt(dist, opts, this.props.id);
+      }
+      else if (dist == "timestamp") {
+          var opts = {
+              startDate: document.getElementById(`start-date-${this.props.id}`).value,
+              endDate: document.getElementById(`end-date-${this.props.id}`).value,
+              startTime: document.getElementById(`start-time-${this.props.id}`).value,
+              endTime: document.getElementById(`end-time-${this.props.id}`).value,
+          };
+          this.props.setOptsInt(dist, opts, this.props.id);
+      }
     }
     this.toggleModal()
   };
@@ -497,8 +518,95 @@ class OptionsModal extends Component {
         </div>
       )
       return modal_html;
-    }
-    else {
+    } else if (this.props.type == "date-time") {
+      var modal_html = (
+        <div>
+          <Button color="secondary" onClick={this.toggleModal}>
+            Options
+          </Button>
+
+          <Modal
+            isOpen={this.state.isOpen}
+            toggle={this.toggleModal}
+            //   className={this.props.className}
+            unmountOnClose={false}
+          >
+            <ModalHeader toggle={this.toggleModal}>Date-Time Options</ModalHeader>
+            <ModalBody>
+              <Form>
+                <FormGroup>
+                  <Label>Type</Label>
+                  <Input
+                    type="select"
+                    name="distribution"
+                    id={`dist-${this.props.id}`}
+                    onChange={this.handleDistributionChange}
+                  >
+                    <option value="">--Select a Type--</option>
+                    <option value="date">Date</option>
+                    <option value="timestamp">Timestamp</option>
+                  </Input>
+                </FormGroup>
+                <hr />
+                <h5>Date</h5>
+                <FormGroup row>
+                  <Col md={6}>
+                    <Label>Start:</Label>
+                    <Input
+                      type="text"
+                      name="end"
+                      id={`start-date-${this.props.id}`}
+                      // onChange={e => this.setState({ option2: e.target.value })}
+                      disabled={this.state.dist == ""}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <Label>End:</Label>
+                    <Input
+                      type="text"
+                      name="end"
+                      id={`end-date-${this.props.id}`}
+                      // onChange={e => this.setState({ option2: e.target.value })}
+                      disabled={this.state.dist == ""}
+                    />
+                  </Col>
+                </FormGroup>
+                <hr />
+                <h5>Time</h5>
+                <FormGroup row>
+                  <Col md={6}>
+                    <Label>Start:</Label>
+                    <Input
+                      type="text"
+                      name="start"
+                      id={`start-time-${this.props.id}`}
+                      // onChange={e => this.setState({ option2: e.target.value })}
+                      disabled={this.state.dist != "timestamp"}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <Label>End</Label>
+                    <Input
+                      type="text"
+                      name="end"
+                      id={`end-time-${this.props.id}`}
+                      // onChange={e => this.setState({ option2: e.target.value })}
+                      disabled={this.state.dist != "timestamp"}
+                    />
+                  </Col>
+                </FormGroup>
+              </Form>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.handleModalSubmit}>
+                Confirm Options
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </div>
+      )
+      return modal_html;
+    } else {
       return (
         <div>
           <Button color="secondary" onClick={this.toggleModal}>
@@ -511,29 +619,7 @@ class OptionsModal extends Component {
           >
             <ModalHeader toggle={this.toggleModal}>Options</ModalHeader>
             <ModalBody>
-              <Input
-                type="select"
-                name="datatype"
-                id={`type-${this.props.id}`}
-                onChange={e => this.setState({ option1: e.target.value })}
-              >
-                <option value="integer">Integer</option>
-                <option value="time-series">Time-Series</option>
-                <option value="email">Email</option>
-                <option value="phone">Phone Number</option>
-              </Input>
-              <Input
-                type="number"
-                name="numcols"
-                id={`numcols-${this.props.id}`}
-                onChange={e => this.setState({ option2: e.target.value })}
-              />
-              <Input
-                type="number"
-                name="foo"
-                id={`foo-${this.props.id}`}
-                onChange={e => this.setState({ option3: e.target.value })}
-              />
+              <h1>Coming soon...</h1>
             </ModalBody>
             <ModalFooter>
               <Button color="primary" onClick={this.handleModalSubmit}>
