@@ -94,18 +94,18 @@ class OptionsModal extends Component {
       }
     }
 
-    else if (type == "categorical") {
+    else if (type === "categorical") {
       // categorical input taken care of in CategoricalInput component
     }
-    else if (type == "date-time") {
-      if (dist == "date") {
+    else if (type === "date-time") {
+      if (dist === "date") {
         var opts = {
           startDate: document.getElementById(`start-date-${this.props.id}`).value,
             endDate: document.getElementById(`end-date-${this.props.id}`).value
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
-      else if (dist == "timestamp") {
+      else if (dist === "timestamp") {
           var opts = {
               startDate: document.getElementById(`start-date-${this.props.id}`).value,
               endDate: document.getElementById(`end-date-${this.props.id}`).value,
@@ -130,61 +130,104 @@ class OptionsModal extends Component {
     let min, max, mean, stdev;
     let state, city;
     let areaCode;
-
-    console.log(this.props.form);
+    let startDate, endDate, startTime, endTime;
 
     let import_options = this.props.form.colOptsArray[this.props.id];
     if (typeof import_options !== 'undefined') {
 
       /* Distributions */
-      if (import_options.dist !== 'undefined') {
+      if (typeof import_options.dist !== 'undefined') {
         dist = import_options.dist;
         this.state.dist = dist;
-        console.log(this.state.dist);
-      }
 
-      /* Specific Options */
-      if (import_options.opts !== 'undefined') {
-        /* Set Uniform: Min, Max */
+
+        /* Set Integer/Float Uniform: Min, Max */
         let type = this.props.form.colTypeArray[this.props.id];
         if (import_options.dist === "uniform") {
           if (type === "float" || type === "integer") {
-            min = import_options.opts.min;
-            max = import_options.opts.max;
+            if (typeof import_options.opts !== 'undefined') {
+              if (typeof import_options.opts.min !== 'undefined')
+                min = import_options.opts.min;
+              if (typeof import_options.opts.max !== 'undefined')
+                max = import_options.opts.max;
+            }
           }
         }
 
-        /* Set Gaussian: Mean, Standard Deviation */
+
+        /* Set Integer/Float Gaussian: Mean, Standard Deviation */
         if (import_options.dist === "normal") {
           if (type === "float" || type === "integer") {
-            mean = import_options.opts.mean;
-            stdev = import_options.opts.standard_deviation;
+            if (typeof import_options.opts !== 'undefined') {
+              if (typeof import_options.opts.mean !== 'undefined')
+                mean = import_options.opts.mean;
+              if (typeof import_options.opts.standard_deviation !== 'undefined')
+                stdev = import_options.opts.standard_deviation;
+            }
           }
         }
 
 
         /* Set Zip Codes: USA, State, City */
         if (import_options.dist === "uniform-state") {
-          state = import_options.opts.state;
+          if (typeof import_options.opts !== 'undefined') {
+            if (typeof import_options.opts.state !== 'undefined')
+              state = import_options.opts.state;
+          }
         }
         else if (import_options.dist === "uniform-city") {
-          state = import_options.opts.state;
-          city = import_options.opts.city;
+          if (typeof import_options.opts !== 'undefined') {
+            if (typeof import_options.opts.state !== 'undefined')
+              state = import_options.opts.state;
+            if (typeof import_options.opts.city !== 'undefined')
+              city = import_options.opts.city;
+          }
         }
 
 
         /* Set Area Code */
         if (import_options.dist === "area-codes") {
-          areaCode = import_options.opts.area-codes;
+          if (typeof import_options.opts !== 'undefined') {
+            if (typeof import_options.opts.areaCodes !== 'undefined')
+            areaCode = import_options.opts.areaCodes;
+          }
         }
 
 
         /* Set Categorical */
-        // if (import_options.dist === "uniform") {
-        //   if (type === "categorical") {
-        //
-        //   }
-        // }
+        if (import_options.dist === "uniform") {
+          if (type === "categorical") {
+            if (typeof import_options.opts !== 'undefined') {
+              //TODO: Finish setting up the distributions from import.
+
+            }
+          }
+        }
+
+
+        /* Set Time-Date: Date and Timestamp */
+        if (import_options.dist === "date") {
+          if (typeof import_options.opts !== 'undefined') {
+            if (typeof import_options.opts.startDate !== 'undefined')
+              startDate = import_options.opts.startDate;
+            if (typeof import_options.opts.endDate !== 'undefined')
+              endDate = import_options.opts.endDate;
+          }
+        }
+        else if (import_options.dist === "timestamp") {
+          if (typeof import_options.opts !== 'undefined') {
+            if (typeof import_options.opts.startDate !== 'undefined')
+              startDate = import_options.opts.startDate;
+            if (typeof import_options.opts.endDate !== 'undefined')
+              endDate = import_options.opts.endDate;
+
+            if (typeof import_options.opts.startTime !== 'undefined')
+              startTime = import_options.opts.startTime;
+            if (typeof import_options.opts.endTime !== 'undefined')
+              endTime = import_options.opts.endTime;
+          }
+        }
+
 
 
 
@@ -234,7 +277,7 @@ class OptionsModal extends Component {
                       name="min"
                       id={`min-${this.props.id}`}
                       disabled={this.state.dist !== "uniform"}
-                      placeholder={min}
+                      defaultValue={min}
                     />
                   </Col>
                   <Col md={6}>
@@ -244,7 +287,7 @@ class OptionsModal extends Component {
                       name="max"
                       id={`max-${this.props.id}`}
                       disabled={this.state.dist !== "uniform"}
-                      placeholder={max}
+                      defaultValue={max}
                     />
                   </Col>
                 </FormGroup>
@@ -258,7 +301,7 @@ class OptionsModal extends Component {
                       name="mean"
                       id={`mean-${this.props.id}`}
                       disabled={this.state.dist !== "normal"}
-                      placeholder={mean}
+                      defaultValue={mean}
                     />
                   </Col>
                   <Col md={6}>
@@ -268,7 +311,7 @@ class OptionsModal extends Component {
                       name="standard-deviation"
                       id={`standard-deviation-${this.props.id}`}
                       disabled={this.state.dist !== "normal"}
-                      placeholder={stdev}
+                      defaultValue={stdev}
                     />
                   </Col>
                 </FormGroup>
@@ -324,7 +367,7 @@ class OptionsModal extends Component {
                       name="min"
                       id={`min-${this.props.id}`}
                       disabled={this.state.dist !== "uniform"}
-                      placeholder={min}
+                      defaultValue={min}
                     />
                   </Col>
                   <Col md={6}>
@@ -334,7 +377,7 @@ class OptionsModal extends Component {
                       name="max"
                       id={`max-${this.props.id}`}
                       disabled={this.state.dist !== "uniform"}
-                      placeholder={max}
+                      defaultValue={max}
                     />
                   </Col>
                 </FormGroup>
@@ -348,7 +391,7 @@ class OptionsModal extends Component {
                       name="mean"
                       id={`mean-${this.props.id}`}
                       disabled={this.state.dist !== "normal"}
-                      placeholder={mean}
+                      defaultValue={mean}
                     />
                   </Col>
                   <Col md={6}>
@@ -358,7 +401,7 @@ class OptionsModal extends Component {
                       name="standard-deviation"
                       id={`standard-deviation-${this.props.id}`}
                       disabled={this.state.dist !== "normal"}
-                      placeholder={stdev}
+                      defaultValue={stdev}
                     />
                   </Col>
                 </FormGroup>
@@ -414,7 +457,7 @@ class OptionsModal extends Component {
                       name="state"
                       id={`state-${this.props.id}`}
                       disabled={(this.state.dist !== "uniform-city") && (this.state.dist !== "uniform-state")}
-                      placeholder={state}
+                      defaultValue={state}
                     />
                   </Col>
                   <Col md={6}>
@@ -424,7 +467,7 @@ class OptionsModal extends Component {
                       name="city"
                       id={`city-${this.props.id}`}
                       disabled={this.state.dist !== "uniform-city"}
-                      placeholder={city}
+                      defaultValue={city}
                     />
                   </Col>
                 </FormGroup>
@@ -479,7 +522,7 @@ class OptionsModal extends Component {
                       name="state"
                       id={`area-codes-${this.props.id}`}
                       disabled={this.state.dist !== "area-codes"}
-                      placeholder={areaCode}
+                      defaultValue={areaCode}
                     />
                   </Col>
                 </FormGroup>
@@ -518,7 +561,7 @@ class OptionsModal extends Component {
         </div>
       )
       return modal_html;
-    } else if (this.props.type == "date-time") {
+    } else if (this.props.type === "date-time") {
       var modal_html = (
         <div>
           <Button color="secondary" onClick={this.toggleModal}>
@@ -528,7 +571,6 @@ class OptionsModal extends Component {
           <Modal
             isOpen={this.state.isOpen}
             toggle={this.toggleModal}
-            //   className={this.props.className}
             unmountOnClose={false}
           >
             <ModalHeader toggle={this.toggleModal}>Date-Time Options</ModalHeader>
@@ -541,6 +583,7 @@ class OptionsModal extends Component {
                     name="distribution"
                     id={`dist-${this.props.id}`}
                     onChange={this.handleDistributionChange}
+                    defaultValue={dist}
                   >
                     <option value="">--Select a Type--</option>
                     <option value="date">Date</option>
@@ -556,8 +599,8 @@ class OptionsModal extends Component {
                       type="text"
                       name="end"
                       id={`start-date-${this.props.id}`}
-                      // onChange={e => this.setState({ option2: e.target.value })}
-                      disabled={this.state.dist == ""}
+                      disabled={this.state.dist === ""}
+                      defaultValue={startDate}
                     />
                   </Col>
                   <Col md={6}>
@@ -567,7 +610,8 @@ class OptionsModal extends Component {
                       name="end"
                       id={`end-date-${this.props.id}`}
                       // onChange={e => this.setState({ option2: e.target.value })}
-                      disabled={this.state.dist == ""}
+                      disabled={this.state.dist === ""}
+                      defaultValue={endDate}
                     />
                   </Col>
                 </FormGroup>
@@ -580,8 +624,8 @@ class OptionsModal extends Component {
                       type="text"
                       name="start"
                       id={`start-time-${this.props.id}`}
-                      // onChange={e => this.setState({ option2: e.target.value })}
-                      disabled={this.state.dist != "timestamp"}
+                      disabled={this.state.dist !== "timestamp"}
+                      defaultValue={startTime}
                     />
                   </Col>
                   <Col md={6}>
@@ -590,8 +634,8 @@ class OptionsModal extends Component {
                       type="text"
                       name="end"
                       id={`end-time-${this.props.id}`}
-                      // onChange={e => this.setState({ option2: e.target.value })}
-                      disabled={this.state.dist != "timestamp"}
+                      disabled={this.state.dist !== "timestamp"}
+                      defaultValue={endTime}
                     />
                   </Col>
                 </FormGroup>

@@ -28,14 +28,6 @@ export const exportConfig = () => {
     }
 };
 
-// IMPORT CONFIG
-export const importConfig = (value) => {
-    return {
-        type: IMPORT_CONFIG,
-        payload: { value }
-    }
-};
-
 // SET NUM ROWS
 export const setNumRows = (value) => {
     return {
