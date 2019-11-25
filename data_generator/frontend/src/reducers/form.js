@@ -59,14 +59,14 @@ function gaussianInt(mean, stdev) {
     To use: call for each number in the row with mean, stdev, and total samples
     */
 function gaussianFloat(mean, stdev, sample_size) {
-    if(!sample_size) sample_size = 100
-    if(!stdev) stdev = 1
-    if(!mean) mean=0
+    if (!sample_size) sample_size = 100
+    if (!stdev) stdev = 1
+    if (!mean) mean = 0
 
     var run_total = 0
-    for(var i=0; i<sample_size; i++)
+    for (var i = 0; i < sample_size; i++)
         run_total += Math.random()
-    let result = ((stdev*(run_total - sample_size/2)/(sample_size/2))/2)*108 + mean
+    let result = ((stdev * (run_total - sample_size / 2) / (sample_size / 2)) / 2) * 108 + mean
     return result;
 }
 
@@ -188,6 +188,7 @@ export default function (state = initialState, action) {
                     dist: "",
                     categoryIdArray: categoryIdArray,
                     categoryNameArray: categoryNameArray,
+                    categoryProbArray: categoryProbArray,
                     hasCorrelation: false
                 }
                 return {
@@ -390,7 +391,7 @@ export default function (state = initialState, action) {
                         for (var k = 0; k < rows; k++) {
                             if (colOpts[i].dist === "uniform-usa") {
                                 var zip = zipcodes.random().zip;
-                                while(zip.length!=5) {
+                                while (zip.length != 5) {
                                     zip = zipcodes.random().zip;
                                 }
                                 arr[k][currentCol] = zip;

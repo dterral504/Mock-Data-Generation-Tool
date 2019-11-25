@@ -74,7 +74,7 @@ class CategoricalInput extends Component {
                             <Label>Name</Label>
                         </Col>
                         <Col md={4}>
-                            <Label>Probability (%)</Label>
+                            <Label>Weight</Label>
                         </Col>
                     </FormGroup>
                     {this.renderCategoricalInputs()}
