@@ -1,4 +1,4 @@
-import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, IMPORT_CONFIG, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME } from "../actions/types.js";
+import { ADD_FIELD, SET_NUM_ROWS, SET_FILE_TYPE, SET_NUM_COLS, SET_DATA_TYPE, IMPORT_CONFIG, EXPORT_CONFIG, GENERATE_DATA, SET_OPTS_INT, SET_CAT_NAME, ADD_CATEGORY, SET_CAT_PROB, SET_CAT_DIST, SET_CORRELATION_OPTS, REMOVE_CORRELATED_COL, SET_FILE_NAME, REMOVE_FIELD } from "../actions/types.js";
 
 var zipcodes = require('zipcodes');
 
@@ -116,6 +116,13 @@ export default function (state = initialState, action) {
                 colIdArray: [...state.colIdArray, state.colIdArray.length]
             };
             break;
+        case REMOVE_FIELD:
+            var newIDs = this.state.colIdArray;
+            newIDs.splice(newIDs.length - 1, 1);
+            return {
+                ...state,
+                colIdArray: newIDs
+            }
 
         case IMPORT_CONFIG:
             var passed_state = action.payload.value.importedConfig;

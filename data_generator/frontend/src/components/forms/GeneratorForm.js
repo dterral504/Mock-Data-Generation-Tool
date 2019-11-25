@@ -31,14 +31,14 @@ class GeneratorForm extends Component {
       fileName.value = this.props.form.fileName;
     }
 
-      return (
+    return (
       <Form>
         <h5>Column Options</h5>
         <hr />
         <Row>
-          <Col md={1}>
+          {/* <Col md={1}>
             <Label>Remove</Label>
-          </Col>
+          </Col> */}
           <Col md={3}>
             <Label>Column Data Type</Label>
           </Col>
@@ -57,6 +57,19 @@ class GeneratorForm extends Component {
         <h5>Row & File Options</h5>
         <hr />
         <FormGroup row>
+          {/* <Col md={3}>
+            <Label>Number of Rows</Label>
+            <Input
+              type="number"
+              name="numrows"
+              id="numrows"
+              onChange={e => {
+                this.props.setNumRows(e.target.value);
+              }}
+            />
+          </Col> */}
+        </FormGroup>
+        <FormGroup row>
           <Col md={3}>
             <Label>Number of Rows</Label>
             <Input
@@ -68,8 +81,6 @@ class GeneratorForm extends Component {
               }}
             />
           </Col>
-        </FormGroup>
-        <FormGroup row>
           <Col md={3}>
             <Label>File Name</Label>
             <Input
@@ -81,7 +92,7 @@ class GeneratorForm extends Component {
               }}
             />
           </Col>
-          <Col md={2}>
+          {/* <Col md={2}>
             <Label>File Format</Label>
             <Input
               type="select"
@@ -92,7 +103,7 @@ class GeneratorForm extends Component {
               <option>CSV</option>
               <option>JSON</option>
             </Input>
-          </Col>
+          </Col> */}
         </FormGroup>
         <hr />
         <FormGroup row>

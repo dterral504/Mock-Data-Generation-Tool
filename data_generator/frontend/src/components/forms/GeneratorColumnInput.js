@@ -15,31 +15,31 @@ class GeneratorColumnInput extends Component {
   }
 
   render() {
-      /* Set Column Numbers from Import Config */
-      var numCols = document.getElementById(`numcols-${this.props.id}`);
-      if (numCols !== null) {
-          for (var i = 0; i < this.props.form.numColsArray.length; i++) {
-              numCols = document.getElementById(`numcols-${i}`);
-              numCols.value = this.props.form.numColsArray[i];
-          }
+    /* Set Column Numbers from Import Config */
+    var numCols = document.getElementById(`numcols-${this.props.id}`);
+    if (numCols !== null) {
+      for (var i = 0; i < this.props.form.numColsArray.length; i++) {
+        numCols = document.getElementById(`numcols-${i}`);
+        numCols.value = this.props.form.numColsArray[i];
       }
+    }
 
-      /* Set Column Types from Import Config */
-      var colTypes = document.getElementById(`type-${this.props.id}`);
-      if (numCols !== null) {
-          for (var i = 0; i < this.props.form.numColsArray.length; i++) {
-              colTypes = document.getElementById(`type-${i}`);
-              colTypes.value = this.props.form.colTypeArray[i];
-          }
+    /* Set Column Types from Import Config */
+    var colTypes = document.getElementById(`type-${this.props.id}`);
+    if (numCols !== null) {
+      for (var i = 0; i < this.props.form.numColsArray.length; i++) {
+        colTypes = document.getElementById(`type-${i}`);
+        colTypes.value = this.props.form.colTypeArray[i];
       }
+    }
 
     return (
       <FormGroup row>
-        <Col md={1}>
+        {/* <Col md={1}>
           <Button outline color="danger">
             Delete
           </Button>
-        </Col>
+        </Col> */}
         <Col md={3}>
           <Input
             type="select"
