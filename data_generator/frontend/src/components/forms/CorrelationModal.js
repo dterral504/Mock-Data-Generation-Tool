@@ -50,8 +50,28 @@ class CorrelationModal extends Component {
     }
 
     render() {
-        if (this.state.isSet == false) {
-            if (this.props.show == false) {
+        /* Add Correlation from Import_Config File */
+        let slope, intercept, stdev;
+        let import_options = this.props.form.colOptsArray[this.props.id];
+        if (typeof import_options !== 'undefined') {
+            if (typeof import_options.correlationOpts !== 'undefined') {
+                console.log("Correlation");
+                console.log(this.props.form.colOptsArray[this.props.id]);
+
+                this.state.isSet = this.props.form.colOptsArray[this.props.id].hasCorrelation;
+                slope = this.props.form.colOptsArray[this.props.id].correlationOpts.slope;
+                intercept = this.props.form.colOptsArray[this.props.id].correlationOpts.intercept;
+                stdev = this.props.form.colOptsArray[this.props.id].correlationOpts.stddev;
+            }
+        }
+
+
+
+
+
+
+        if (this.state.isSet === false) {
+            if (this.props.show === false) {
                 var modal_html = (
                     <div>
                         <span id="add-correlation">
@@ -81,6 +101,7 @@ class CorrelationModal extends Component {
                                             onChange={e => {
                                                 this.setState({ slope: parseInt(e.target.value) });
                                             }}
+                                            defaultValue={slope}
                                         >
                                         </Input>
                                     </FormGroup>
@@ -93,6 +114,7 @@ class CorrelationModal extends Component {
                                             onChange={e => {
                                                 this.setState({ intercept: parseInt(e.target.value) });
                                             }}
+                                            defaultValue={intercept}
                                         >
                                         </Input>
                                     </FormGroup>
@@ -105,6 +127,7 @@ class CorrelationModal extends Component {
                                             onChange={e => {
                                                 this.setState({ stddev: parseInt(e.target.value) });
                                             }}
+                                            defaultValue={stdev}
                                         >
                                         </Input>
                                     </FormGroup>
@@ -121,7 +144,7 @@ class CorrelationModal extends Component {
             } else {
                 var modal_html = (
                     <div>
-                        <Button color="info" onClick={this.toggleModal} disabled={this.props.show == false}>
+                        <Button color="info" onClick={this.toggleModal} disabled={this.props.show === false}>
                             Add Correlated Column
                         </Button>
 
@@ -142,6 +165,8 @@ class CorrelationModal extends Component {
                                             onChange={e => {
                                                 this.setState({ slope: parseInt(e.target.value) });
                                             }}
+                                            defaultValue={slope}
+
                                         >
                                         </Input>
                                     </FormGroup>
@@ -154,6 +179,8 @@ class CorrelationModal extends Component {
                                             onChange={e => {
                                                 this.setState({ intercept: parseInt(e.target.value) });
                                             }}
+                                            defaultValue={intercept}
+
                                         >
                                         </Input>
                                     </FormGroup>
@@ -166,6 +193,8 @@ class CorrelationModal extends Component {
                                             onChange={e => {
                                                 this.setState({ stddev: parseInt(e.target.value) });
                                             }}
+                                            defaultValue={stdev}
+
                                         >
                                         </Input>
                                     </FormGroup>
@@ -180,10 +209,10 @@ class CorrelationModal extends Component {
                     </div >
                 )
             }
-        } else if (this.state.isSet == true) {
+        } else if (this.state.isSet === true) {
             var modal_html = (
                 <div>
-                    <Button color="danger" onClick={this.removeCorrelatedCol} disabled={this.props.show == false}>
+                    <Button color="danger" onClick={this.removeCorrelatedCol} >
                         Remove Correlated Column
                     </Button>
                 </div >

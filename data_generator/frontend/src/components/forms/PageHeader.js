@@ -23,7 +23,6 @@ class PageHeader extends Component {
 
 
   importConfirm = evt => {
-    // the "obj" argument to importConfig needs to be whatever you want to pass to the reducer
     var obj = this.state;
     this.props.importConfig(obj);
   }
