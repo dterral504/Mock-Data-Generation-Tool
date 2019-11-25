@@ -203,9 +203,9 @@ export default function (state = initialState, action) {
             };
 
         case SET_CAT_PROB:
-            var newArr = action.payload.colOptsArray.splice(0)
-            var currOpts = newArr[action.payload.id]
-            var currProbs = currOpts.categoryProbArray.splice(0)
+            var newArr = action.payload.colOptsArray.splice(0);
+            var currOpts = newArr[action.payload.id];
+            var currProbs = currOpts.categoryProbArray.splice(0);
             currProbs[action.payload.catid] = parseInt(action.payload.value)
             var newOpts = {
                 ...currOpts,
@@ -274,6 +274,10 @@ export default function (state = initialState, action) {
                                 for (let k = 0; k < rows; k++) {
                                     arr[k][currentCol] = Math.round(normal_dist());
                                 }
+                            } else {
+                                for (let k = 0; k < rows; k++) {
+                                    arr[k][currentCol] = Math.round(Math.random() * 100);
+                                }
                             }
                         } else if (colOpts[i].hasCorrelation === true) {
                             if (colOpts[i].dist === "uniform") {
@@ -297,9 +301,14 @@ export default function (state = initialState, action) {
                                 }
                             }
                             currentCol++;
+                        } else if (typeof colOpts[i].hasCorrelation === 'undefined') {
+                            for (let k = 0; k < rows; k++) {
+                                arr[k][currentCol] = Math.round(Math.random() * 100);
+                            }
                         }
 
-                    } else if (types[i] === "float") {
+                    }
+                    else if (types[i] === "float") {
                         if (colOpts[i].hasCorrelation === false) {
                             if (colOpts[i].dist === "uniform") {
                                 var min = colOpts[i].opts.min;
@@ -312,6 +321,10 @@ export default function (state = initialState, action) {
                                 var stdev = colOpts[i].opts.standard_deviation;
                                 for (var k = 0; k < rows; k++) {
                                     arr[k][currentCol] = gaussianFloat(mean, stdev, rows);
+                                }
+                            } else {
+                                for (let k = 0; k < rows; k++) {
+                                    arr[k][currentCol] = Math.random() * 100;
                                 }
                             }
                         } else if (colOpts[i].hasCorrelation === true) {
@@ -333,6 +346,10 @@ export default function (state = initialState, action) {
                                 }
                             }
                             currentCol++;
+                        } else if (typeof colOpts[i].hasCorrelation === 'undefined') {
+                            for (let k = 0; k < rows; k++) {
+                                arr[k][currentCol] = Math.random() * 100;
+                            }
                         }
                     }
                     else if (types[i] === "zip-code") {

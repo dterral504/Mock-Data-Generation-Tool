@@ -55,9 +55,6 @@ class CorrelationModal extends Component {
         let import_options = this.props.form.colOptsArray[this.props.id];
         if (typeof import_options !== 'undefined') {
             if (typeof import_options.correlationOpts !== 'undefined') {
-                console.log("Correlation");
-                console.log(this.props.form.colOptsArray[this.props.id]);
-
                 this.state.isSet = this.props.form.colOptsArray[this.props.id].hasCorrelation;
                 slope = this.props.form.colOptsArray[this.props.id].correlationOpts.slope;
                 intercept = this.props.form.colOptsArray[this.props.id].correlationOpts.intercept;
