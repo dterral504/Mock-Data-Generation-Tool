@@ -101,18 +101,18 @@ class OptionsModal extends Component {
       if (dist === "date") {
         var opts = {
           startDate: document.getElementById(`start-date-${this.props.id}`).value,
-            endDate: document.getElementById(`end-date-${this.props.id}`).value
+          endDate: document.getElementById(`end-date-${this.props.id}`).value
         };
         this.props.setOptsInt(dist, opts, this.props.id);
       }
       else if (dist === "timestamp") {
-          var opts = {
-              startDate: document.getElementById(`start-date-${this.props.id}`).value,
-              endDate: document.getElementById(`end-date-${this.props.id}`).value,
-              startTime: document.getElementById(`start-time-${this.props.id}`).value,
-              endTime: document.getElementById(`end-time-${this.props.id}`).value,
-          };
-          this.props.setOptsInt(dist, opts, this.props.id);
+        var opts = {
+          startDate: document.getElementById(`start-date-${this.props.id}`).value,
+          endDate: document.getElementById(`end-date-${this.props.id}`).value,
+          startTime: document.getElementById(`start-time-${this.props.id}`).value,
+          endTime: document.getElementById(`end-time-${this.props.id}`).value,
+        };
+        this.props.setOptsInt(dist, opts, this.props.id);
       }
     }
     this.toggleModal()
@@ -189,7 +189,7 @@ class OptionsModal extends Component {
         if (import_options.dist === "area-codes") {
           if (typeof import_options.opts !== 'undefined') {
             if (typeof import_options.opts.areaCodes !== 'undefined')
-            areaCode = import_options.opts.areaCodes;
+              areaCode = import_options.opts.areaCodes;
           }
         }
 
@@ -240,438 +240,440 @@ class OptionsModal extends Component {
 
     if (this.props.type === "integer") {
       var modal_html = (
-        <div>
-          <Button color="secondary" onClick={this.toggleModal}>
-            Options
-          </Button>
+          <div>
+            <Button color="secondary" onClick={this.toggleModal}>
+              Options
+            </Button>
 
-          <Modal
-            isOpen={this.state.isOpen}
-            toggle={this.toggleModal}
-            unmountOnClose={false}
-          >
-            <ModalHeader toggle={this.toggleModal}>Integer Options</ModalHeader>
-            <ModalBody>
-              <Form>
-                <FormGroup>
-                  <Label>Distribution</Label>
-                  <Input
-                    type="select"
-                    name="distribution"
-                    id={`dist-${this.props.id}`}
-                    onChange={this.handleDistributionChange}
-                    defaultValue={dist}
-                  >
-                    <option value="">--Select a Distribution--</option>
-                    <option value="uniform">Uniform</option>
-                    <option value="normal">Gaussian (Normal)</option>
-                  </Input>
-                </FormGroup>
-                <hr />
-                <h5>Uniform</h5>
-                <FormGroup row>
-                  <Col md={6}>
-                    <Label>Min Value</Label>
+            <Modal
+                isOpen={this.state.isOpen}
+                toggle={this.toggleModal}
+                unmountOnClose={false}
+            >
+              <ModalHeader toggle={this.toggleModal}>Integer Options</ModalHeader>
+              <ModalBody>
+                <Form>
+                  <FormGroup>
+                    <Label>Distribution</Label>
                     <Input
-                      type="number"
-                      name="min"
-                      id={`min-${this.props.id}`}
-                      disabled={this.state.dist !== "uniform"}
-                      defaultValue={min}
-                    />
-                  </Col>
-                  <Col md={6}>
-                    <Label>Max Value</Label>
-                    <Input
-                      type="number"
-                      name="max"
-                      id={`max-${this.props.id}`}
-                      disabled={this.state.dist !== "uniform"}
-                      defaultValue={max}
-                    />
-                  </Col>
-                </FormGroup>
-                <hr />
-                <h5>Gaussian (Normal)</h5>
-                <FormGroup row>
-                  <Col md={6}>
-                    <Label>Mean</Label>
-                    <Input
-                      type="number"
-                      name="mean"
-                      id={`mean-${this.props.id}`}
-                      disabled={this.state.dist !== "normal"}
-                      defaultValue={mean}
-                    />
-                  </Col>
-                  <Col md={6}>
-                    <Label>Standard Deviation</Label>
-                    <Input
-                      type="number"
-                      name="standard-deviation"
-                      id={`standard-deviation-${this.props.id}`}
-                      disabled={this.state.dist !== "normal"}
-                      defaultValue={stdev}
-                    />
-                  </Col>
-                </FormGroup>
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.handleModalSubmit}>
-                Confirm Options
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </div>
+                        type="select"
+                        name="distribution"
+                        id={`dist-${this.props.id}`}
+                        onChange={this.handleDistributionChange}
+                        defaultValue={dist}
+                    >
+                      <option value="">--Select a Distribution--</option>
+                      <option value="uniform">Uniform</option>
+                      <option value="normal">Gaussian (Normal)</option>
+                    </Input>
+                  </FormGroup>
+                  <hr />
+                  <h5>Uniform</h5>
+                  <FormGroup row>
+                    <Col md={6}>
+                      <Label>Min Value</Label>
+                      <Input
+                          type="number"
+                          name="min"
+                          id={`min-${this.props.id}`}
+                          disabled={this.state.dist !== "uniform"}
+                          defaultValue={min}
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <Label>Max Value</Label>
+                      <Input
+                          type="number"
+                          name="max"
+                          id={`max-${this.props.id}`}
+                          disabled={this.state.dist !== "uniform"}
+                          defaultValue={max}
+                      />
+                    </Col>
+                  </FormGroup>
+                  <hr />
+                  <h5>Gaussian (Normal)</h5>
+                  <FormGroup row>
+                    <Col md={6}>
+                      <Label>Mean</Label>
+                      <Input
+                          type="number"
+                          name="mean"
+                          id={`mean-${this.props.id}`}
+                          disabled={this.state.dist !== "normal"}
+                          defaultValue={mean}
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <Label>Standard Deviation</Label>
+                      <Input
+                          type="number"
+                          name="standard-deviation"
+                          id={`standard-deviation-${this.props.id}`}
+                          disabled={this.state.dist !== "normal"}
+                          defaultValue={stdev}
+                      />
+                    </Col>
+                  </FormGroup>
+                </Form>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onClick={this.handleModalSubmit}>
+                  Confirm Options
+                </Button>
+              </ModalFooter>
+            </Modal>
+          </div>
       )
       return modal_html;
     }
     else if (this.props.type === "float") {
       var modal_html = (
-        <div>
-          <Button color="secondary" onClick={this.toggleModal}>
-            Options
-          </Button>
+          <div>
+            <Button color="secondary" onClick={this.toggleModal}>
+              Options
+            </Button>
 
-          <Modal
-            isOpen={this.state.isOpen}
-            toggle={this.toggleModal}
-            unmountOnClose={false}
-          >
-            <ModalHeader toggle={this.toggleModal}>Float Options</ModalHeader>
-            <ModalBody>
-              <Form>
-                <FormGroup>
-                  <Label>Distribution</Label>
-                  <Input
-                    type="select"
-                    name="distribution"
-                    id={`dist-${this.props.id}`}
-                    defaultValue={dist}
-                    onChange={this.handleDistributionChange}
-                  >
-                    <option value="">--Select a Distribution--</option>
-                    <option value="uniform" >Uniform</option>
-                    <option value="normal">Gaussian (Normal)</option>
-                  </Input>
+            <Modal
+                isOpen={this.state.isOpen}
+                toggle={this.toggleModal}
+                unmountOnClose={false}
+            >
+              <ModalHeader toggle={this.toggleModal}>Float Options</ModalHeader>
+              <ModalBody>
+                <Form>
+                  <FormGroup>
+                    <Label>Distribution</Label>
+                    <Input
+                        type="select"
+                        name="distribution"
+                        id={`dist-${this.props.id}`}
+                        defaultValue={dist}
+                        onChange={this.handleDistributionChange}
+                    >
+                      <option value="">--Select a Distribution--</option>
+                      <option value="uniform" >Uniform</option>
+                      <option value="normal">Gaussian (Normal)</option>
+                    </Input>
 
-                </FormGroup>
-                <hr />
-                <h5>Uniform</h5>
-                <FormGroup row>
-                  <Col md={6}>
-                    <Label>Min Value</Label>
-                    <Input
-                      type="number"
-                      name="min"
-                      id={`min-${this.props.id}`}
-                      disabled={this.state.dist !== "uniform"}
-                      defaultValue={min}
-                    />
-                  </Col>
-                  <Col md={6}>
-                    <Label>Max Value</Label>
-                    <Input
-                      type="number"
-                      name="max"
-                      id={`max-${this.props.id}`}
-                      disabled={this.state.dist !== "uniform"}
-                      defaultValue={max}
-                    />
-                  </Col>
-                </FormGroup>
-                <hr />
-                <h5>Gaussian (Normal)</h5>
-                <FormGroup row>
-                  <Col md={6}>
-                    <Label>Mean</Label>
-                    <Input
-                      type="number"
-                      name="mean"
-                      id={`mean-${this.props.id}`}
-                      disabled={this.state.dist !== "normal"}
-                      defaultValue={mean}
-                    />
-                  </Col>
-                  <Col md={6}>
-                    <Label>Standard Deviation</Label>
-                    <Input
-                      type="number"
-                      name="standard-deviation"
-                      id={`standard-deviation-${this.props.id}`}
-                      disabled={this.state.dist !== "normal"}
-                      defaultValue={stdev}
-                    />
-                  </Col>
-                </FormGroup>
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.handleModalSubmit}>
-                Confirm Options
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </div>
+                  </FormGroup>
+                  <hr />
+                  <h5>Uniform</h5>
+                  <FormGroup row>
+                    <Col md={6}>
+                      <Label>Min Value</Label>
+                      <Input
+                          type="number"
+                          name="min"
+                          id={`min-${this.props.id}`}
+                          disabled={this.state.dist !== "uniform"}
+                          defaultValue={min}
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <Label>Max Value</Label>
+                      <Input
+                          type="number"
+                          name="max"
+                          id={`max-${this.props.id}`}
+                          disabled={this.state.dist !== "uniform"}
+                          defaultValue={max}
+                      />
+                    </Col>
+                  </FormGroup>
+                  <hr />
+                  <h5>Gaussian (Normal)</h5>
+                  <FormGroup row>
+                    <Col md={6}>
+                      <Label>Mean</Label>
+                      <Input
+                          type="number"
+                          name="mean"
+                          id={`mean-${this.props.id}`}
+                          disabled={this.state.dist !== "normal"}
+                          defaultValue={mean}
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <Label>Standard Deviation</Label>
+                      <Input
+                          type="number"
+                          name="standard-deviation"
+                          id={`standard-deviation-${this.props.id}`}
+                          disabled={this.state.dist !== "normal"}
+                          defaultValue={stdev}
+                      />
+                    </Col>
+                  </FormGroup>
+                </Form>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onClick={this.handleModalSubmit}>
+                  Confirm Options
+                </Button>
+              </ModalFooter>
+            </Modal>
+          </div>
       )
       return modal_html;
     }
     else if (this.props.type === "zip-code") {
       var modal_html = (
-        <div>
-          <Button color="secondary" onClick={this.toggleModal}>
-            Options
-          </Button>
+          <div>
+            <Button color="secondary" onClick={this.toggleModal}>
+              Options
+            </Button>
 
-          <Modal
-            isOpen={this.state.isOpen}
-            toggle={this.toggleModal}
-            unmountOnClose={false}
-          >
-            <ModalHeader toggle={this.toggleModal}>Zip Code Options</ModalHeader>
-            <ModalBody>
-              <Form>
-                <FormGroup>
-                  <Label>Distribution</Label>
-                  <Input
-                    type="select"
-                    name="distribution"
-                    id={`dist-${this.props.id}`}
-                    onChange={this.handleDistributionChange}
-                    defaultValue={dist}
-                  >
-                    <option value="">--Select a Distribution--</option>
-                    <option value="uniform-usa">Uniform (USA)</option>
-                    <option value="uniform-state">Uniform (State)</option>
-                    <option value="uniform-city">Uniform (City)</option>
-                  </Input>
-                </FormGroup>
-                <hr />
-                <h5>Uniform</h5>
-                <FormGroup row>
-                  <Col md={6}>
-                    <Label>State</Label>
+            <Modal
+                isOpen={this.state.isOpen}
+                toggle={this.toggleModal}
+                unmountOnClose={false}
+            >
+              <ModalHeader toggle={this.toggleModal}>Zip Code Options</ModalHeader>
+              <ModalBody>
+                <Form>
+                  <FormGroup>
+                    <Label>Distribution</Label>
                     <Input
-                      type="text"
-                      name="state"
-                      id={`state-${this.props.id}`}
-                      disabled={(this.state.dist !== "uniform-city") && (this.state.dist !== "uniform-state")}
-                      defaultValue={state}
-                    />
-                  </Col>
-                  <Col md={6}>
-                    <Label>City</Label>
-                    <Input
-                      type="text"
-                      name="city"
-                      id={`city-${this.props.id}`}
-                      disabled={this.state.dist !== "uniform-city"}
-                      defaultValue={city}
-                    />
-                  </Col>
-                </FormGroup>
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.handleModalSubmit}>
-                Confirm Options
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </div>
+                        type="select"
+                        name="distribution"
+                        id={`dist-${this.props.id}`}
+                        onChange={this.handleDistributionChange}
+                        defaultValue={dist}
+                    >
+                      <option value="">--Select a Distribution--</option>
+                      <option value="uniform-usa">Uniform (USA)</option>
+                      <option value="uniform-state">Uniform (State)</option>
+                      <option value="uniform-city">Uniform (City)</option>
+                    </Input>
+                  </FormGroup>
+                  <hr />
+                  <h5>Uniform</h5>
+                  <FormGroup row>
+                    <Col md={6}>
+                      <Label>State</Label>
+                      <Input
+                          type="text"
+                          name="state"
+                          id={`state-${this.props.id}`}
+                          disabled={(this.state.dist !== "uniform-city") && (this.state.dist !== "uniform-state")}
+                          defaultValue={state}
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <Label>City</Label>
+                      <Input
+                          type="text"
+                          name="city"
+                          id={`city-${this.props.id}`}
+                          disabled={this.state.dist !== "uniform-city"}
+                          defaultValue={city}
+                      />
+                    </Col>
+                  </FormGroup>
+                </Form>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onClick={this.handleModalSubmit}>
+                  Confirm Options
+                </Button>
+              </ModalFooter>
+            </Modal>
+          </div>
       )
       return modal_html;
     }
     else if (this.props.type === "phone") {
       var modal_html = (
-        <div>
-          <Button color="secondary" onClick={this.toggleModal}>
-            Options
-          </Button>
+          <div>
+            <Button color="secondary" onClick={this.toggleModal}>
+              Options
+            </Button>
 
-          <Modal
-            isOpen={this.state.isOpen}
-            toggle={this.toggleModal}
-            unmountOnClose={false}
-          >
-            <ModalHeader toggle={this.toggleModal}>Phone Number Options</ModalHeader>
-            <ModalBody>
-              <Form>
-                <FormGroup>
-                  <Label>Filter</Label>
-                  <Input
-                    type="select"
-                    name="distribution"
-                    id={`dist-${this.props.id}`}
-                    onChange={this.handleDistributionChange}
-                    defaultValue={dist}
-                  >
-                    <option value="">--Select a Distribution--</option>
-                    <option value="all-area-codes">None</option>
-                    <option value="area-codes">By Area Code</option>
-                  </Input>
-                </FormGroup>
-                <hr />
-                <h5>Area Code</h5>
-                <FormGroup row>
-                  <Col md={12}>
-                    <Label>Area Code</Label>
+            <Modal
+                isOpen={this.state.isOpen}
+                toggle={this.toggleModal}
+                unmountOnClose={false}
+            >
+              <ModalHeader toggle={this.toggleModal}>Phone Number Options</ModalHeader>
+              <ModalBody>
+                <Form>
+                  <FormGroup>
+                    <Label>Filter</Label>
                     <Input
-                      type="text"
-                      name="state"
-                      id={`area-codes-${this.props.id}`}
-                      disabled={this.state.dist !== "area-codes"}
-                      defaultValue={areaCode}
-                    />
-                  </Col>
-                </FormGroup>
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.handleModalSubmit}>
-                Confirm Options
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </div>
+                        type="select"
+                        name="distribution"
+                        id={`dist-${this.props.id}`}
+                        onChange={this.handleDistributionChange}
+                        defaultValue={dist}
+                    >
+                      <option value="">--Select a Distribution--</option>
+                      <option value="all-area-codes">None</option>
+                      <option value="area-codes">By Area Code</option>
+                    </Input>
+                  </FormGroup>
+                  <hr />
+                  <h5>Area Code</h5>
+                  <FormGroup row>
+                    <Col md={12}>
+                      <Label>Area Code</Label>
+                      <Input
+                          type="text"
+                          name="state"
+                          id={`area-codes-${this.props.id}`}
+                          disabled={this.state.dist !== "area-codes"}
+                          defaultValue={areaCode}
+                      />
+                    </Col>
+                  </FormGroup>
+                </Form>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onClick={this.handleModalSubmit}>
+                  Confirm Options
+                </Button>
+              </ModalFooter>
+            </Modal>
+          </div>
       )
       return modal_html;
     }
     else if (this.props.type === "categorical") {
       var modal_html = (
-        <div>
-          <Button color="secondary" onClick={this.toggleModal}>
-            Options
-          </Button>
+          <div>
+            <Button color="secondary" onClick={this.toggleModal}>
+              Options
+            </Button>
 
-          <Modal
-            isOpen={this.state.isOpen}
-            toggle={this.toggleModal}
-            unmountOnClose={false}
-          >
-            <ModalHeader toggle={this.toggleModal}>Categorical Options</ModalHeader>
-            <CategoricalInput id={this.props.id} />
-            <ModalFooter>
-              <Button color="primary" onClick={this.handleModalSubmit}>
-                Confirm Options
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </div>
+            <Modal
+                isOpen={this.state.isOpen}
+                toggle={this.toggleModal}
+                unmountOnClose={false}
+            >
+              <ModalHeader toggle={this.toggleModal}>Categorical Options</ModalHeader>
+              <CategoricalInput id={this.props.id} />
+              <ModalFooter>
+                <Button color="primary" onClick={this.handleModalSubmit}>
+                  Confirm Options
+                </Button>
+              </ModalFooter>
+            </Modal>
+          </div>
       )
       return modal_html;
     } else if (this.props.type === "date-time") {
       var modal_html = (
-        <div>
-          <Button color="secondary" onClick={this.toggleModal}>
-            Options
-          </Button>
+          <div>
+            <Button color="secondary" onClick={this.toggleModal}>
+              Options
+            </Button>
 
-          <Modal
-            isOpen={this.state.isOpen}
-            toggle={this.toggleModal}
-            unmountOnClose={false}
-          >
-            <ModalHeader toggle={this.toggleModal}>Date-Time Options</ModalHeader>
-            <ModalBody>
-              <Form>
-                <FormGroup>
-                  <Label>Type</Label>
-                  <Input
-                    type="select"
-                    name="distribution"
-                    id={`dist-${this.props.id}`}
-                    onChange={this.handleDistributionChange}
-                    defaultValue={dist}
-                  >
-                    <option value="">--Select a Type--</option>
-                    <option value="date">Date</option>
-                    <option value="timestamp">Timestamp</option>
-                  </Input>
-                </FormGroup>
-                <hr />
-                <h5>Date</h5>
-                <FormGroup row>
-                  <Col md={6}>
-                    <Label>Start:</Label>
+            <Modal
+                isOpen={this.state.isOpen}
+                toggle={this.toggleModal}
+                unmountOnClose={false}
+            >
+              <ModalHeader toggle={this.toggleModal}>Date-Time Options</ModalHeader>
+              <ModalBody>
+                <Form>
+                  <FormGroup>
+                    <Label>Type</Label>
                     <Input
-                      type="text"
-                      name="end"
-                      id={`start-date-${this.props.id}`}
-                      disabled={this.state.dist === ""}
-                      defaultValue={startDate}
-                    />
-                  </Col>
-                  <Col md={6}>
-                    <Label>End:</Label>
-                    <Input
-                      type="text"
-                      name="end"
-                      id={`end-date-${this.props.id}`}
-                      // onChange={e => this.setState({ option2: e.target.value })}
-                      disabled={this.state.dist === ""}
-                      defaultValue={endDate}
-                    />
-                  </Col>
-                </FormGroup>
-                <hr />
-                <h5>Time</h5>
-                <FormGroup row>
-                  <Col md={6}>
-                    <Label>Start:</Label>
-                    <Input
-                      type="text"
-                      name="start"
-                      id={`start-time-${this.props.id}`}
-                      disabled={this.state.dist !== "timestamp"}
-                      defaultValue={startTime}
-                    />
-                  </Col>
-                  <Col md={6}>
-                    <Label>End</Label>
-                    <Input
-                      type="text"
-                      name="end"
-                      id={`end-time-${this.props.id}`}
-                      disabled={this.state.dist !== "timestamp"}
-                      defaultValue={endTime}
-                    />
-                  </Col>
-                </FormGroup>
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.handleModalSubmit}>
-                Confirm Options
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </div>
+                        type="select"
+                        name="distribution"
+                        id={`dist-${this.props.id}`}
+                        onChange={this.handleDistributionChange}
+                        defaultValue={dist}
+                    >
+                      <option value="">--Select a Type--</option>
+                      <option value="date">Date</option>
+                      <option value="timestamp">Timestamp</option>
+                    </Input>
+                  </FormGroup>
+                  <hr />
+                  <h5>Date</h5>
+                  <h6>(MM/DD/YYYY)</h6>
+                  <FormGroup row>
+                    <Col md={6}>
+                      <Label>Start:</Label>
+                      <Input
+                          type="text"
+                          name="end"
+                          id={`start-date-${this.props.id}`}
+                          disabled={this.state.dist === ""}
+                          defaultValue={startDate}
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <Label>End:</Label>
+                      <Input
+                          type="text"
+                          name="end"
+                          id={`end-date-${this.props.id}`}
+                          // onChange={e => this.setState({ option2: e.target.value })}
+                          disabled={this.state.dist === ""}
+                          defaultValue={endDate}
+                      />
+                    </Col>
+                  </FormGroup>
+                  <hr />
+                  <h5>Time</h5>
+                  <h6>(HH:MM:SS)</h6>
+                  <FormGroup row>
+                    <Col md={6}>
+                      <Label>Start:</Label>
+                      <Input
+                          type="text"
+                          name="start"
+                          id={`start-time-${this.props.id}`}
+                          disabled={this.state.dist !== "timestamp"}
+                          defaultValue={startTime}
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <Label>End</Label>
+                      <Input
+                          type="text"
+                          name="end"
+                          id={`end-time-${this.props.id}`}
+                          disabled={this.state.dist !== "timestamp"}
+                          defaultValue={endTime}
+                      />
+                    </Col>
+                  </FormGroup>
+                </Form>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onClick={this.handleModalSubmit}>
+                  Confirm Options
+                </Button>
+              </ModalFooter>
+            </Modal>
+          </div>
       )
       return modal_html;
     } else {
       return (
-        <div>
-          <Button color="secondary" onClick={this.toggleModal}>
-            Options
-          </Button>
-          <Modal
-            isOpen={this.state.isOpen}
-            toggle={this.toggleModal}
-            unmountOnClose={false}
-          >
-            <ModalHeader toggle={this.toggleModal}>Options</ModalHeader>
-            <ModalBody>
-              <h1>Coming soon...</h1>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.handleModalSubmit}>
-                Confirm Options
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </div>
+          <div>
+            <Button color="secondary" onClick={this.toggleModal}>
+              Options
+            </Button>
+            <Modal
+                isOpen={this.state.isOpen}
+                toggle={this.toggleModal}
+                unmountOnClose={false}
+            >
+              <ModalHeader toggle={this.toggleModal}>Options</ModalHeader>
+              <ModalBody>
+                <h1>Coming soon...</h1>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onClick={this.handleModalSubmit}>
+                  Confirm Options
+                </Button>
+              </ModalFooter>
+            </Modal>
+          </div>
       );
     }
 

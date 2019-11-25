@@ -58,17 +58,51 @@ function gaussianInt(mean, stdev) {
     This function returns a float on a normal distribution.
     To use: call for each number in the row with mean, stdev, and total samples
     */
-function gaussianFloat(mean, stdev, sample_size){
+function gaussianFloat(mean, stdev, sample_size) {
     if(!sample_size) sample_size = 100
     if(!stdev) stdev = 1
     if(!mean) mean=0
 
     var run_total = 0
     for(var i=0; i<sample_size; i++)
-       run_total += Math.random()
+        run_total += Math.random()
     let result = ((stdev*(run_total - sample_size/2)/(sample_size/2))/2)*108 + mean
     return result;
+}
 
+
+/* Convert short hand notation for month into standard form
+ * Example: "Jan" -> "January"
+ */
+function convertMonthToLongNotation(month) {
+    switch (month.toString()) {
+        case "Jan":
+            return "01";
+        case "Feb":
+            return "02";
+        case "Mar":
+            return "03";
+        case "Apr":
+            return "04";
+        case "May":
+            return "05";
+        case "Jun":
+            return "06";
+        case "Jul":
+            return "07";
+        case "Aug":
+            return "08";
+        case "Sep":
+            return "09";
+        case "Oct":
+            return "10";
+        case "Nov":
+            return "11";
+        case "Dec":
+            return "12";
+        default:
+            return;
+    }
 }
 
 export default function (state = initialState, action) {
@@ -355,11 +389,7 @@ export default function (state = initialState, action) {
                     else if (types[i] === "zip-code") {
                         for (var k = 0; k < rows; k++) {
                             if (colOpts[i].dist === "uniform-usa") {
-                                var zip = zipcodes.random().zip;
-                                while(zip.length!=5){
-                                    zip = zipcodes.random().zip;
-                                }
-                                arr[k][currentCol] = zip;
+                                arr[k][currentCol] = zipcodes.random().zip;
                             }
                             else if (colOpts[i].dist === "uniform-state") {
                                 var stateZipCodes = zipcodes.lookupByState(colOpts[i].opts.state);
@@ -426,17 +456,44 @@ export default function (state = initialState, action) {
                     }
                     else if (types[i] === "date-time") {
                         if (colOpts[i].dist === "date") {
-                            var start = new Date(colOpts[i].opts.startDate);
-                            var end = new Date(colOpts[i].opts.endDate);
-                            for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+                            let start = new Date(colOpts[i].opts.startDate);
+                            let end = new Date(colOpts[i].opts.endDate);
+                            for (let k = 0; k < rows; k++) {
+                                /* Get Random Date within bounds and split into array */
+                                let fullDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toDateString();
+                                fullDate = fullDate.split(" ", 4);
+
+                                /* Get full month notation from date. Ex: "Jan" -> "January" */
+                                let fullDateMonth = convertMonthToLongNotation(fullDate[1]).toString();
+
+                                /* Get the day number and the year from the full date */
+                                let fullDateDayNumber = fullDate[2].toString();
+                                let fullDateYear = fullDate[3].toString();
+
+                                /* Store result */
+                                arr[k][currentCol] = fullDateMonth + "/ " + fullDateDayNumber + "/" + fullDateYear;
                             }
                         }
                         if (colOpts[i].dist === "timestamp") {
-                            var start = new Date(colOpts[i].opts.startDate + " " + colOpts[i].opts.startTime);
-                            var end = new Date(colOpts[i].opts.endDate + " " + colOpts[i].opts.endTime);
-                            for (var k = 0; k < rows; k++) {
-                                arr[k][currentCol] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+                            let start = new Date(colOpts[i].opts.startDate + " " + colOpts[i].opts.startTime);
+                            let end = new Date(colOpts[i].opts.endDate + " " + colOpts[i].opts.endTime);
+                            for (let k = 0; k < rows; k++) {
+                                /* Get Random Date within bounds and split into array */
+                                let fullDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toString();
+                                fullDate = fullDate.split(" ", 5);
+
+                                /* Get full month notation from date. Ex: "Jan" -> "January" */
+                                let fullDateMonth = convertMonthToLongNotation(fullDate[1]).toString();
+
+                                /* Get the day number and the year from the full date */
+                                let fullDateDayNumber = fullDate[2].toString();
+                                let fullDateYear = fullDate[3].toString();
+
+                                /* Get time stamp */
+                                let fullDateTimeStamp = fullDate[4];
+
+                                /* Store result */
+                                arr[k][currentCol] = fullDateMonth + "/ " + fullDateDayNumber + "/" + fullDateYear + "*" + fullDateTimeStamp;
                             }
                         }
                     }
