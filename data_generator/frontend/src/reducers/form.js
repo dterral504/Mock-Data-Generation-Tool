@@ -35,11 +35,8 @@ function gaussianInt(mean, stdev) {
             var x1, x2, w;
             do {
                 x1 = 2.0 * Math.random() - 1.0;
-                // console.log("x1: " + x1);
                 x2 = 2.0 * Math.random() - 1.0;
-                // console.log("x2: " + x2);
                 w = x1 * x1 + x2 * x2;
-                // console.log("w: " + w)
             } while (w >= 1.0);
             w = Math.sqrt((-2.0 * Math.log(w)) / w);
             y1 = x1 * w;
@@ -70,8 +67,6 @@ function gaussianFloat(mean, stdev, sample_size){
     for(var i=0; i<sample_size; i++)
        run_total += Math.random()
     let result = ((stdev*(run_total - sample_size/2)/(sample_size/2))/2)*108 + mean
-    console.log(result);
-    console.log(Math.round(result));
     return result;
 
 }
@@ -315,7 +310,6 @@ export default function (state = initialState, action) {
                             } else if (colOpts[i].dist === "normal") {
                                 var mean = colOpts[i].opts.mean;
                                 var stdev = colOpts[i].opts.standard_deviation;
-                                // console.log("float Uniform");
                                 for (var k = 0; k < rows; k++) {
                                     arr[k][currentCol] = gaussianFloat(mean, stdev, rows);
                                 }
