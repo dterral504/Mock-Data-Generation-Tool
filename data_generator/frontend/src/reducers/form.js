@@ -389,7 +389,12 @@ export default function (state = initialState, action) {
                     else if (types[i] === "zip-code") {
                         for (var k = 0; k < rows; k++) {
                             if (colOpts[i].dist === "uniform-usa") {
-                                arr[k][currentCol] = zipcodes.random().zip;
+                                var zip = zipcodes.random().zip;
+                                while(zip.length!=5) {
+                                    zip = zipcodes.random().zip;
+                                }
+                                arr[k][currentCol] = zip;
+
                             }
                             else if (colOpts[i].dist === "uniform-state") {
                                 var stateZipCodes = zipcodes.lookupByState(colOpts[i].opts.state);
